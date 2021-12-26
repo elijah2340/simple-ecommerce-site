@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<!-- ========================= SECTION MAIN ========================= -->
+<section class="section-intro padding-y-sm">
+<div class="container">
+
+<div class="intro-banner-wrap">
+	<img src="{% static 'images/banners/cover.jpg' %}" class="img-fluid rounded">
+</div>
+
+</div> <!-- container //  -->
+</section>
+<!-- ========================= SECTION MAIN END// ========================= -->
+
+<!-- ========================= SECTION  ========================= -->
+<section class="section-name padding-y-sm">
+<div class="container">
+
+<header class="section-heading">
+	<a href="{% url 'store' %}" class="btn btn-outline-primary float-right">See all</a>
+	<h3 class="section-title">Popular products</h3>
+</header><!-- sect-heading -->
+
+
+<div class="row">
+	{% for product in products %}
+	<div class="col-md-3">
+		<div class="card card-product-grid">
+			<a href="{% url 'product_detail' product.category.cat_slug product.slug %}" class="img-wrap"> <img src="{{ product.image.url }}"> </a>
+			<figcaption class="info-wrap">
+				<a href="{% url 'product_detail' product.category.cat_slug product.slug %}" class="title">{{ product.product_name }}</a>
+				<div class="rating-star">
+					<span>
+						<i class="fa fa-star{% if product.averageReview < 0.5 %}-o{% elif product.averageReview >= 0.5 and product.averageReview < 1%}-half-o{% endif %}" aria-hidden="true"></i>
+						<i class="fa fa-star{% if product.averageReview < 1.5 %}-o{% elif product.averageReview >= 1.5 and product.averageReview < 2 %}-half-o{% endif %}" aria-hidden="true"></i>
+						<i class="fa fa-star{% if product.averageReview < 2.5 %}-o{% elif product.averageReview >= 2.5 and product.averageReview < 3 %}-half-o{% endif %}" aria-hidden="true"></i>
+						<i class="fa fa-star{% if product.averageReview < 3.5 %}-o{% elif product.averageReview >= 3.5 and product.averageReview < 4 %}-half-o{% endif %}" aria-hidden="true"></i>
+						<i class="fa fa-star{% if product.averageReview < 4.5 %}-o{% elif product.averageReview >= 4.5 and product.averageReview < 5 %}-half-o{% endif %}" aria-hidden="true"></i>
+					</span><span>{{product.countReview }}</span> reviews
+				</div>
+				<div class="price mt-1">₦ {{ product.price }}</div> <!-- price-wrap.// -->
+				<a href="{% url 'product_detail' product.category.cat_slug product.slug %}" class="btn btn-block btn-primary">View Details </a>
+			</figcaption>
+		</div>
+	</div> <!-- col.// -->
+	{% endfor %}
+</div> <!-- row.// -->
+	<nav class="mt-4" aria-label="Page navigation sample">
+  <ul class="pagination">
+	  {% if products.has_other_pages %}
+
+	  {% if products.has_previous %}
+    <li class="page-item"><a class="page-link" href="?page={{ products.previous_page_number }}">Previous</a></li>
+	  {% endif %}
+	  {% for i in products.paginator.page_range %}
+	  	{% if products.number == i %}
+	  		<li class="page-item active"><a class="page-link" href="?pae={{ product.number }}">{{ i }}</a></li>
+	  	{% elif i > products.number|add:'-3' and i < products.number|add:'3' %}
+    		<li class="page-item "><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+	  	{% endif %}
+	  {% endfor %}
+	  {% if products.has_next %}
+    	<li class="page-item"><a class="page-link" href="?page={{ products.next_page_number }}">Next</a></li>
+	  {% endif %}
+	  <li class="page-item"><a class="page-link" href="?page={{ products.paginator.num_pages }}">Last</a></li>
+	  {% endif %}
+  </ul>
+</nav>
+
+</div><!-- container // -->
+
+</section>
+<!-- ========================= SECTION  END// ========================= -->
+{% endblock %}
