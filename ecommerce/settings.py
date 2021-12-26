@@ -161,7 +161,7 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')  # host email password requi
 # https://myaccount.google.com/lesssecureapps
 # otherwise you will get SMTPAuthenticationError at /contactus
 # this process is required because google blocks apps authentication by default
-# EMAIL_RECEIVING_USER = ['elijahjohn2340@gmail.com']  # email on which you will receive messages sent from website
+# EMAIL_RECEIVING_USER =  # email on which you will receive messages sent from website
 
 PAYSTACK_PUBLIC_KEY = 'pk_test_a404dc5c4b090bb876cf7a6363d02be27472c59b'
 PAYSTACK_PRIVATE_KEY = 'sk_test_b386d242c90ce9c12f28843426a43c2f568e8dd0'
