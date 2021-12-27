@@ -23,6 +23,9 @@
 }
 @media all and (max-width: 768px) {
   /* mobile devices */
+  .mainImage > center img {
+    width: 95%;
+  }
   .mobile-block {
     display: block;
   }
