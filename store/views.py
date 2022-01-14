@@ -52,7 +52,6 @@ def productDetail(request, slug, cat_slug):
     # get reviews
 
     reviews = ReviewRating.objects.filter(product__id=product.id, status=True)
-
     # get product gallery
 
     product_gallery = ProductGallery.objects.filter(product_id=product.id)
