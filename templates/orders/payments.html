@@ -11,7 +11,7 @@
 	<h4 class="text-center">Review Your Order And Make Payment</h4>
 	<aside class="col-lg-8">
         <div class="card">
-            <h5 class="card-header">Billing Address</h5>
+            <h5 class="card-header">Billing Details</h5>
             <div class="card-body">
                 <p class="card-text mb-0">{{ order.full_name }}</p>
 				<p class="card-text mb-0">{{ order.full_address }}</p>
@@ -20,12 +20,11 @@
 				<p class="card-text mb-0">{{ order.email  }}</p>
 				<p class="card-text mb-0">{{ order.phone_number  }}</p>
             </div>
-        </div>
-
-        <div class="card">
-            <h5 class="card-header">Payment Method</h5>
-            <div class="card-body">
-                <p class="card-text">Paystack</p>
+			<h5 class="card-header">Shipping Address</h5>
+			<div class="card-body">
+				<p class="card-text mb-0">{{ order.shipping_address }}</p>
+				<p class="card-text mb-0">{{ order.shipping_city }}, {{ order.shipping_state }}</p>
+				<p class="card-text mb-0">{{ order.shipping_country  }}</p>
             </div>
         </div>
 
@@ -113,10 +112,14 @@
 <!--				<input class="form-control" type="email" id="email-address" placeholder="re-enter email address to get invoice" required />-->
 <!--			  </div>-->
 			  <div class="form-submit">
-				<button type="submit" class="btn btn-primary btn-block" onclick="payWithPaystack(event)"> Make Payment </button>
+				<button type="submit" class="btn btn-primary btn-block" onclick="payWithPaystack(event)"> Checkout with Paystack </button>
 			  </div>
-			</form>
+			</form><br>
 			<script src="https://js.paystack.co/v1/inline.js"></script>
+			<form onsubmit="makePayment()" id="payment-form">
+				<button type="button" onclick="makePayment(event)" value="Submit" class="btn btn-primary btn-block">Checkout with Remitta</button>
+           </form>
+			 <script type="text/javascript" src="https://remitademo.net/payment/v1/remita-pay-inline.bundle.js"></script>
 		</div> <!-- card-body.// -->
 		</div> <!-- card.// -->
 
@@ -195,5 +198,55 @@ function payWithPaystack(e) {
 
 }
 </script>
+  <script>
+  const paymentform = document.getElementById('payment-form');
+	paymentform.addEventListener("submit", makePayment, false);
+      function makePayment(e) {
+      e.preventDefault(event);
+          var form = document.querySelector("#payment-form");
+          var paymentEngine = RmPaymentEngine.init({
+              key: 'QzAwMDAyNzEyNTl8MTEwNjE4NjF8OWZjOWYwNmMyZDk3MDRhYWM3YThiOThlNTNjZTE3ZjYxOTY5NDdmZWE1YzU3NDc0ZjE2ZDZjNTg1YWYxNWY3NWM4ZjMzNzZhNjNhZWZlOWQwNmJhNTFkMjIxYTRiMjYzZDkzNGQ3NTUxNDIxYWNlOGY4ZWEyODY3ZjlhNGUwYTY=',
+             // transactionId: Math.floor(Math.random()*1101233), // Replace with a reference you generated or remove the entire field for us to auto-generate a reference for you. Note that you will be able to check the status of this transaction using this transaction Id
+              customerId: "{{ order.email }}",
+              firstName: "{{ order.full_name }}",
+              lastName: " {{ order.last_name }}",
+              email: "{{ order.email }}",
+              amount: {{ grand_total }},
+              narration: "purchase by {{ order.full_name }}",
+              onSuccess: function sendData(response) {
+                  fetch("{% url 'payments' order.id %}", {
+                  	method: "POST",
+                  	headers: {
+                  	"Content-type": "appllication/json",
+                  	"x-CSRFToken": "{{ csrf_token }}",
+                  },
+                  body: JSON.stringify({
+				  	'referenceid': response.transactionId,
+					'amount': {{grand_total}},
+					'status': "completed",
+					})
+					})
+                  // console.log('callback Successful Response', response);
+                 //  .then((response) => response.json())
+                   .then((data) => {
+                   	window.location.href = "{% url 'payments' order.id %}"
+                   	})
+              },
+              onError: function (response) {
+                  console.log('callback Error Response', response);
+
+              },
+              onClose: function () {
+                  console.log("closed");
+              },
+			});
+
+           paymentEngine.showPaymentWidget();
+
+
+      }
+
+
+  </script>
 
 {% endblock %}

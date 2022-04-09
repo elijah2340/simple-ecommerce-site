@@ -5,9 +5,9 @@
 			<a class="list-group-item {% if '/my-orders/' in request.path %}active{% endif %}" href="{% url 'my_orders' %}"> My orders </a>
 			<a class="list-group-item {% if '/edit-profile/' in request.path %}active{% endif %} "  href="{% url 'edit_profile' %}"> Edit Profile </a>
 			<a class="list-group-item {% if '/change-password/' in request.path %}active{% endif %}" href="{% url 'change_password' %}"> Change Password </a>
-            <a class="list-group-item" href="#">Return and refunds </a>
-			<a class="list-group-item" href="#"> My Selling Items </a>
-			<a class="list-group-item" href="#"> Received orders </a>
+<!--            <a class="list-group-item" href="#">Return and refunds </a>-->
+<!--			<a class="list-group-item" href="#"> My Selling Items </a>-->
+<!--			<a class="list-group-item" href="#"> Received orders </a>-->
 		</ul>
 		<br>
 		<a class="btn btn-light btn-block" href="{% url 'logout' %}"> <i class="fa fa-power-off"></i> <span class="text">Log out</span> </a>

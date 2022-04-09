@@ -73,6 +73,10 @@ class UserProfile(models.Model):
     city = models.CharField(blank=True, max_length=255)
     state = models.CharField(blank=True, max_length=255)
     country = models.CharField(blank=True, max_length=255)
+    shipping_address = models.CharField(blank=True, max_length=255)
+    shipping_city = models.CharField(blank=True, max_length=255)
+    shipping_state = models.CharField(blank=True, max_length=255)
+    shipping_country = models.CharField(blank=True, max_length=255)
 
     def __str__(self):
         return self.user.first_name

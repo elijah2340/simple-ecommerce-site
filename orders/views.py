@@ -2,13 +2,16 @@ from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
+import json
+from .process import html_to_pdf
+from accounts.models import UserProfile
+from django.http import HttpResponse
 
 from cart.models import CartItem
 from .models import Order, Payment, OrderProduct
 from .forms import OrderForm
 import datetime
 from django.conf import settings
-from pypaystack import Transaction, Customer, Plan
 from django.http import JsonResponse
 from store.models import Product
 
@@ -16,27 +19,23 @@ from store.models import Product
 
 def paymentview(request, id):
     current_user = request.user
-    transaction = Transaction(authorization_key=settings.PAYSTACK_PRIVATE_KEY)
     order = Order.objects.get(user=current_user, id=id)
     cart_items = CartItem.objects.filter(user=current_user)
-    payment = Payment()
-    if request.method == 'POST':
-        reference = request.POST.get('referenceid', False)
-        amount = request.POST.get('amount', False)
-        status = request.POST.get('status', "Pending")
-        payment.user = current_user
-        payment.payment_id = reference
-        payment.amount_paid = amount
-        payment.status = status
-        payment.payment_method = "Paystack"
-        payment.created_at = datetime.datetime.now()
-        payment.save()
+    try :
+        body = json.loads(request.body)
+        payment = Payment(
+            user=current_user,
+            payment_id=body['referenceid'],
+            amount_paid=body['amount'],
+            status="completed",
+            payment_method="Remita",
+            created_at=datetime.datetime.now()
 
+        )
+        payment.save()
         order.is_ordered = True
         order.payment = payment
         order.save()
-        # move cart items to order product table
-
         for item in cart_items:
             orderproduct = OrderProduct()
             orderproduct.order_id = order.id
@@ -53,12 +52,11 @@ def paymentview(request, id):
             orderproduct = OrderProduct.objects.get(id=orderproduct.id)
             orderproduct.variations.set(product_variation)
             orderproduct.save()
-
-        # reduce quantity of sold products
-
-            product = Product.objects.get(id=item.product_id)
-            product.stock -= item.quantity
-            product.save()
+        #     # reduce quantity of sold products
+        #
+        product = Product.objects.get(id=item.product_id)
+        product.stock -= item.quantity
+        product.save()
         # send order recived email
         current_site = get_current_site(request)
         mail_subject = 'Thank you for your order!'
@@ -69,10 +67,64 @@ def paymentview(request, id):
         to_email = current_user.email
         send_email = EmailMessage(mail_subject, message, to=[to_email])
         send_email.send()
-    # clear cart
-    CartItem.objects.filter(user=current_user).delete()
+        # clear cart
+        CartItem.objects.filter(user=current_user).delete()
 
-    # send order number and transaction id back to user in thank u page
+    except:
+        payment = Payment()
+        if request.method == 'POST':
+            reference = request.POST.get('referenceid', False)
+            amount = request.POST.get('amount', False)
+            status = request.POST.get('status', "Pending")
+            payment.user = current_user
+            payment.payment_id = reference
+            payment.amount_paid = amount
+            payment.status = status
+            payment.payment_method = "Paystack"
+            payment.created_at = datetime.datetime.now()
+            payment.save()
+
+            order.is_ordered = True
+            order.payment = payment
+            order.save()
+            # move cart items to order product table
+
+            for item in cart_items:
+                orderproduct = OrderProduct()
+                orderproduct.order_id = order.id
+                orderproduct.payment = payment
+                orderproduct.user = request.user
+                orderproduct.product_id = item.product_id
+                orderproduct.quantity = item.quantity
+                orderproduct.product_price = item.product.price
+                orderproduct.ordered = True
+                orderproduct.save()
+
+                cart_item = CartItem.objects.get(id=item.id)
+                product_variation = cart_item.variations.all()
+                orderproduct = OrderProduct.objects.get(id=orderproduct.id)
+                orderproduct.variations.set(product_variation)
+                orderproduct.save()
+        #
+        #     # reduce quantity of sold products
+        #
+                product = Product.objects.get(id=item.product_id)
+                product.stock -= item.quantity
+                product.save()
+        #     # send order recived email
+            current_site = get_current_site(request)
+            mail_subject = 'Thank you for your order!'
+            message = render_to_string('orders/order_received_email.html', {
+                'user': current_user,
+                'order': order
+            })
+            to_email = current_user.email
+            send_email = EmailMessage(mail_subject, message, to=[to_email])
+            send_email.send()
+        # clear cart
+        CartItem.objects.filter(user=current_user).delete()
+
+        # send order number and transaction id back to user in thank u page
     try:
         ordered_products = OrderProduct.objects.filter(order_id=order.id)
         context = {
@@ -87,8 +139,28 @@ def paymentview(request, id):
         return redirect('home')
 
 
+def GeneratePdf(request, order_id):
+    order = Order.objects.get(user=request.user, id=order_id)
+    ordered_products = OrderProduct.objects.filter(order_id=order.id)
+    context = {
+        'user': request.user,
+        'order_id': order.id,
+        'order_date': order.created_at,
+        'ordered_products': ordered_products,
+        'order': order
+    }
+    open('templates/temp.html', "w+").write(render_to_string('orders/reciept.html', context))
+
+    # Converting the HTML template into a PDF file
+    pdf = html_to_pdf('temp.html')
+
+    # rendering the template
+    return HttpResponse(pdf, content_type='application/pdf')
+
+
 def placeorderview(request,  total=0, quantity=0):
     current_user = request.user
+    profile = UserProfile.objects.get(user=current_user)
     cart_items = CartItem.objects.filter(user=current_user)
     cart_count = cart_items.count()
     if cart_count <= 0:
@@ -115,10 +187,24 @@ def placeorderview(request,  total=0, quantity=0):
             data.country = form.cleaned_data['country']
             data.state = form.cleaned_data['state']
             data.city = form.cleaned_data['city']
+            data.shipping_address = form.cleaned_data['shipping_address']
+            data.shipping_state = form.cleaned_data['shipping_state']
+            data.shipping_city = form.cleaned_data['shipping_city']
+            data.shipping_country = form.cleaned_data['shipping_country']
             data.shipping_fee = shipping_fee
             data.order_total = grand_total
             data.ip = request.META.get('REMOTE_ADDR')
             data.save()
+            profile.address_line_1 = form.cleaned_data['address_line_1']
+            profile.address_line_2 = form.cleaned_data['address_line_2']
+            profile.state = form.cleaned_data['state']
+            profile.city = form.cleaned_data['city']
+            profile.country = form.cleaned_data['country']
+            profile.shipping_address = form.cleaned_data['shipping_address']
+            profile.shipping_state = form.cleaned_data['shipping_state']
+            profile.shipping_city = form.cleaned_data['shipping_city']
+            profile.shipping_country = form.cleaned_data['shipping_country']
+            profile.save()
 
             # generate order number whth date and order id
             # yr = int(datetime.date.today().strftime('%Y'))

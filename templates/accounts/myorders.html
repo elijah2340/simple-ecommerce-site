@@ -34,10 +34,10 @@
 						{% for order in orders %}
 						<tr>
 							<th scope="row"><a href="{% url 'order_detail' order.order_number %}">{{ order.order_number}}</a></th>
-							<td>{{order.full_name}}</td>
-							<td>{{order.phone_number}}</td>
-							<td>₦ {{order.order_total}}</td>
-							<td>{{order.created_at}}</td>
+							<td><a href="{% url 'order_detail' order.order_number %}">{{order.full_name}}</a></td>
+							<td><a href="{% url 'order_detail' order.order_number %}">{{order.phone_number}}</a></td>
+							<td><a href="{% url 'order_detail' order.order_number %}">₦ {{order.order_total}}</a></td>
+							<td><a href="{% url 'order_detail' order.order_number %}">{{order.created_at}}</a></td>
 						</tr>
 						{% endfor %}
 						</tbody>

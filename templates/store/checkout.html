@@ -17,31 +17,31 @@
             <div class="form-row">
                 <div class="col form-group">
                     <label for="first_name">First Name</label>
-                    <input id="first_name" type="text" name="first_name" class="form-control" required>
+                    <input id="first_name" type="text" name="first_name" class="form-control" required value="{{ first_name }}">
                 </div>
 
                 <div class="col form-group">
                     <label for="last_name">Last Name</label>
-                    <input id="last_name" type="text" name="last_name" class="form-control" required>
+                    <input id="last_name" type="text" name="last_name" class="form-control" required value="{{ last_name }}">
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="col form-group">
                     <label for="email">Email Address</label>
-                    <input id="email" type="text" name="email" class="form-control" required>
+                    <input id="email" type="text" name="email" class="form-control" required value="{{ email }}">
                 </div>
 
                 <div class="col form-group">
                     <label for="phone_number">Phone number</label>
-                    <input id="phone_number" type="number" name="phone_number" class="form-control" required>
+                    <input id="phone_number" type="number" name="phone_number" class="form-control" required value="{{ phone_number }}">
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="col form-group">
                     <label for="address_line_1">Address 1</label>
-                    <input id="address_line_1" type="text" name="address_line_1" class="form-control" required>
+                    <input id="address_line_1" type="text" name="address_line_1" class="form-control" required value="{{  address }}">
                 </div>
 
                 <div class="col form-group">
@@ -53,16 +53,40 @@
             <div class="form-row">
                 <div class="col form-group">
                     <label for="city">City</label>
-                    <input id="city" type="text" name="city" class="form-control" required>
+                    <input id="city" type="text" name="city" class="form-control" required value="{{ city }}">
                 </div>
 
                 <div class="col form-group">
                     <label for="state">State</label>
-                    <input id="state" type="text" name="state" class="form-control">
+                    <input id="state" type="text" name="state" class="form-control" value="{{ state }}">
                 </div>
                 <div class="col form-group">
                     <label for="country">country</label>
-                    <input id="country" type="text" name="country" class="form-control">
+                    <input id="country" type="text" name="country" class="form-control" value="{{ country }}">
+                </div>
+            </div>
+        <h4 class="text-center">Shipping Address</h4>
+
+            <div class="form-row">
+                <div class="col form-group">
+                    <label for="shipping_address">Shipping Address</label>
+                    <input id="shipping_address" type="text" name="shipping_address" class="form-control" required value="{{  shipping_address }}">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col form-group">
+                    <label for="shipping_city">City</label>
+                    <input id="shipping_city" type="text" name="shipping_city" class="form-control" required value="{{ shipping_city }}">
+                </div>
+
+                <div class="col form-group">
+                    <label for="shipping_state">State</label>
+                    <input id="shipping_state" type="text" name="shipping_state" class="form-control" value="{{ shipping_state }}">
+                </div>
+                <div class="col form-group">
+                    <label for="shipping_country">country</label>
+                    <input id="shipping_country" type="text" name="shipping_country" class="form-control" value="{{ shipping_country }}">
                 </div>
             </div>
     </div>

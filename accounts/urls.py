@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import *
-
+from orders.views import GeneratePdf
 
 urlpatterns = [
     path('register/', registerview, name='register'),
@@ -14,5 +14,6 @@ urlpatterns = [
     path('my-orders/', myorderview, name='my_orders'),
     path('edit-profile/', editprofileview, name='edit_profile'),
     path('change-password/', changepasswordview, name='change_password'),
-    path('order-detail/<int:order_id>/', orderdetailview, name='order_detail')
+    path('order-detail/<int:order_id>/', orderdetailview, name='order_detail'),
+    path('order-detail/<int:order_id>/pdf/', GeneratePdf, name="pdf"),
 ]

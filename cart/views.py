@@ -4,6 +4,7 @@ from .models import Cart, CartItem
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from accounts.models import UserProfile
 
 
 def _cart_id(request):
@@ -174,6 +175,7 @@ def cart(request, total=0, quantity=0, cart_items=None):
 
 @login_required(login_url='login')
 def checkoutview(request, total=0, quantity=0, cart_items=None):
+    current_user = UserProfile.objects.get(user=request.user)
     shipping_fee = (2 * total) / 100
     grand_total = total + shipping_fee
 
@@ -197,6 +199,18 @@ def checkoutview(request, total=0, quantity=0, cart_items=None):
         'cart_items': cart_items,
         'shipping_fee': shipping_fee,
         'grand_total': grand_total,
-        'pk_key': paystack_pubkey
+        'pk_key': paystack_pubkey,
+        'first_name': current_user.user.first_name,
+        'last_name': current_user.user.last_name,
+        'email': current_user.user.email,
+        'phone_number': current_user.user.phone_number,
+        'address': current_user.address_line_1,
+        'city': current_user.city,
+        'state': current_user.state,
+        'country': current_user.country,
+        'shipping_address': current_user.shipping_address,
+        'shipping_city': current_user.shipping_city,
+        'shipping_state': current_user.shipping_state,
+        'shipping_country': current_user.shipping_country
     }
     return render(request, 'store/checkout.html', context)
