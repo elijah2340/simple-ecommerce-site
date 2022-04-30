@@ -112,12 +112,12 @@
 <!--				<input class="form-control" type="email" id="email-address" placeholder="re-enter email address to get invoice" required />-->
 <!--			  </div>-->
 			  <div class="form-submit">
-				<button type="submit" class="btn btn-primary btn-block" onclick="payWithPaystack(event)"> Checkout with Paystack </button>
+				<button type="submit" class="btn btn-primary btn-block" onclick="payWithPaystack(event)"> Pay with Paystack </button>
 			  </div>
 			</form><br>
 			<script src="https://js.paystack.co/v1/inline.js"></script>
 			<form onsubmit="makePayment()" id="payment-form">
-				<button type="button" onclick="makePayment(event)" value="Submit" class="btn btn-primary btn-block">Checkout with Remitta</button>
+				<button type="button" onclick="makePayment(event)" value="Submit" class="btn btn-primary btn-block">Pay with Remitta</button>
            </form>
 			 <script type="text/javascript" src="https://remitademo.net/payment/v1/remita-pay-inline.bundle.js"></script>
 		</div> <!-- card-body.// -->
@@ -223,7 +223,7 @@ function payWithPaystack(e) {
                   body: JSON.stringify({
 				  	'referenceid': response.transactionId,
 					'amount': {{grand_total}},
-					'status': "completed",
+					'status' : "completed",
 					})
 					})
                   // console.log('callback Successful Response', response);
