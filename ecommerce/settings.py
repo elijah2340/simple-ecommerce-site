@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'cart',
     'orders',
     'admin_honeypot',
+    'django_simple_coupons',
 ]
 
 MIDDLEWARE = [
@@ -165,3 +166,6 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')  # host email password requi
 
 PAYSTACK_PUBLIC_KEY = 'pk_test_a404dc5c4b090bb876cf7a6363d02be27472c59b'
 PAYSTACK_PRIVATE_KEY = 'sk_test_b386d242c90ce9c12f28843426a43c2f568e8dd0'
+
+STRIPE_PUBLISHABLE_KEY = 'pk_test_51KuJqrLXDUxdYuDBlszXnWJQCVIC22SmWTLQjX1nvD2KfSP6cwrjzQTTQmjexnqdcqhmH5PVOXbw0GL299JXnJ9x00jAMisf97'
+STRIPE_SECRET_KEY = 'sk_test_51KuJqrLXDUxdYuDBW8qHEZR5PTt1MlK6h8BGJf1MQXNInR5nQo95rmebyLoXB4ioFdRrU0MjhZ2SUT24dsHuMcEZ00wkMqwzXw'

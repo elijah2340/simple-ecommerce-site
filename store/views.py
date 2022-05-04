@@ -8,12 +8,14 @@ from cart.views import _cart_id
 from django.core.paginator import *
 from.forms import Reviewform
 from orders.models import OrderProduct
+from accounts.models import UserProfile
 
 
 def storeview(request, cat_slug=None):
     category = None
     products =None
     prduct_count = 0
+    categories = None
     if cat_slug != None:
         categories = get_object_or_404(Category, cat_slug=cat_slug)
         products = Product.objects.filter(category=categories).order_by('-created_date')
@@ -29,7 +31,8 @@ def storeview(request, cat_slug=None):
         paged_products = paginator.get_page(page)
     context = {
         'products': paged_products,
-        'product_count': product_count
+        'product_count': product_count,
+        'category': categories
     }
     return render(request, 'store/store.html', context)
 
@@ -84,9 +87,10 @@ def searchview(request):
 
 def reviewview(request, product_id):
     url = request.META.get('HTTP_REFERER')
+    user = UserProfile.objects.get(user=request.user)
     if request.method == 'POST':
         try:
-            reviews = ReviewRating.objects.get(user__id=request.user.id, product__id=product_id)
+            reviews = ReviewRating.objects.get(user=user, product__id=product_id)
             form = Reviewform(request.POST, instance=reviews)
             form.save()
             messages.success(request, 'Your review has been updated.')

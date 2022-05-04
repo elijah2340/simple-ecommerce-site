@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Order, Payment, OrderProduct
+from .models import Order, Payment, OrderProduct, PromoCode
 
 
 class OrderProductInline(admin.TabularInline):
@@ -25,4 +25,5 @@ class PaymentAdmin(admin.ModelAdmin):
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Payment, PaymentAdmin)
 admin.site.register(OrderProduct)
+admin.site.register(PromoCode)
 

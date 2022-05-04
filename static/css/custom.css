@@ -63,3 +63,194 @@ ul.thumb li img {
     height: 80px;
     border: 1px solid grey;
 }
+
+.bg-color-a{
+    background-color:#fc3c68!important;
+}
+
+.bg-color-b {
+    background-color:#00a4f8!important;
+}
+
+.category-style-01 {
+    display:inline-block;
+    font-size:14px;
+    font-weight:400;
+    color:#fff;
+    padding:3px 17px 2px;
+    border:1px solid transparent;
+    border-radius:25px;
+    text-transform:capitalize;
+    margin-right:15px;
+    z-index:1;
+}
+
+.category-style-01:hover {
+    color:#fff;
+}
+
+.category-style-01.v-02 {
+    border-radius:0;
+}
+
+.position-top-left {
+    position:absolute;
+    left:20px!important;
+    top:20px!important;
+}
+
+.position-top-left-02 {
+    position:absolute;
+    left:0!important;
+    top:0!important
+}
+
+.position-top-right {
+    position:absolute;
+    right:20px!important;
+    top:20px!important;
+}
+
+.tag-box .category-style-01 {
+    position:relative!important;
+    z-index:3;
+}
+.category-style-01{
+    padding:0;
+    font-weight:500;
+    color:#999;}
+
+.category-style-01:hover {
+    color:var(--main-color-one);
+}
+
+.rating-star i{
+    color: #ffb503; important!
+}
+
+/* hide radio button */
+.rate > input {
+    display: none;
+}
+
+.rate{
+    display: inline-block;
+    border: 0;
+}
+
+.rate > label {
+    float: right;
+}
+
+/* show stars */
+
+.rate > label:before {
+    font-size: 1.5rem;
+    font-family: FontAwesome;
+    content:"\f005";
+    margin: 0;
+    padding: 0.3rem .2rem;
+    cursor: pointer;
+}
+
+/* half star */
+.rate .half:before {
+    content: "\f089";
+    position: absolute;
+    padding-right: 0;
+}
+
+/* ================= RATINGS ============== */
+.label-rating {
+  margin-left: 7px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* rating-list */
+.rating-stars {
+  display: inline-block;
+  vertical-align: middle;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  white-space: nowrap;
+  clear: both;
+}
+.rating-stars i {
+  font-size: 14px;
+  color: #ccc;
+  display: inline;
+}
+.rating-stars img {
+  height: 14px;
+  max-width: none;
+}
+.rating-stars li {
+  display: block;
+  text-overflow: clip;
+  white-space: nowrap;
+  z-index: 1;
+}
+.rating-stars li.stars-active {
+  z-index: 2;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+.rating-stars li.stars-active i {
+  color: orange;
+}
+.rating-stars.stars-lg img {
+  height: 20px;
+  max-width: none;
+}
+
+/* hide radio button */
+.rate > input {
+    display: none;
+}
+
+.rate{
+    display: inline-block;
+    border: 0;
+}
+
+.rate > label {
+    float: right;
+}
+
+/* show stars */
+
+.rate > label:before {
+    font-size: 1.5rem;
+    font-family: FontAwesome;
+    content:"\f005";
+    margin: 0;
+    padding: 0.3rem .2rem;
+    cursor: pointer;
+}
+
+/* half star */
+.rate .half:before {
+    content: "\f089";
+    position: absolute;
+    padding-right: 0;
+}
+
+/* click and hover */
+input:checked ~ label, label:hover ~ label{
+    color: #ffb503;
+}
+
+/* hover highlight */
+
+input:checked + label:hover, input:checked ~ label:hover, input:checked ~ label:hover ~ label, label:hover ~ input:checked ~label{
+    color: #cc9000;
+}
+
+.rating-star i{
+    color: #ffb503; important!
+}

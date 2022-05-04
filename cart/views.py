@@ -193,6 +193,7 @@ def checkoutview(request, total=0, quantity=0, cart_items=None):
     except ObjectDoesNotExist:
         pass
     paystack_pubkey = settings.PAYSTACK_PUBLIC_KEY
+    stripe_pubkey = settings.STRIPE_PUBLISHABLE_KEY
     context = {
         'total': total,
         'quantity': quantity,
@@ -200,6 +201,7 @@ def checkoutview(request, total=0, quantity=0, cart_items=None):
         'shipping_fee': shipping_fee,
         'grand_total': grand_total,
         'pk_key': paystack_pubkey,
+        'stripe_pubkey': stripe_pubkey,
         'first_name': current_user.user.first_name,
         'last_name': current_user.user.last_name,
         'email': current_user.user.email,

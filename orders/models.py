@@ -1,6 +1,7 @@
 from django.db import models
 from accounts.models import Account
 from store.models import Product, Variation
+from accounts.models import UserProfile
 
 
 class Payment(models.Model):
@@ -15,6 +16,16 @@ class Payment(models.Model):
         return self.payment_id
 
 
+class PromoCode(models.Model):
+    code = models.CharField(max_length=15)
+    amount = models.FloatField()
+    user = models.ManyToManyField(UserProfile, blank=True)
+    usage_times = models.IntegerField()
+
+    def __str__(self):
+        return self.code
+
+
 class Order(models.Model):
     STATUS = (
         ('New', 'New'),
@@ -25,6 +36,7 @@ class Order(models.Model):
 
     user = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True)
     payment = models.ForeignKey(Payment, on_delete=models.SET_NULL, null=True)
+    coupon = models.CharField(null=True, blank=True, max_length=15)
     order_number = models.CharField(max_length=20)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
@@ -35,6 +47,7 @@ class Order(models.Model):
     country = models.CharField(max_length=255)
     state = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
+    shipping_address_same_as_billing = models.BooleanField(default=False)
     shipping_address = models.CharField(max_length=255, blank=True)
     shipping_country = models.CharField(max_length=255, blank=True)
     shipping_state = models.CharField(max_length=255, blank=True)
@@ -47,6 +60,7 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
 
@@ -55,6 +69,7 @@ class Order(models.Model):
 
     def __str__(self):
         return self.first_name
+
 
 
 class OrderProduct(models.Model):

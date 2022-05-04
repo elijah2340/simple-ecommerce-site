@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% block title %}Payments{% endblock %}
 {% load static %}
+{% block static %}
+<link rel="stylesheet" href="{% static 'css/ui.css' %}">
+<link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+<link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+{% endblock %}
+
 {% block content %}
 
 <section class="section-content padding-y bg">
@@ -22,9 +28,15 @@
             </div>
 			<h5 class="card-header">Shipping Address</h5>
 			<div class="card-body">
+				{% if order.shipping_address_same_as_billing %}
+				<p class="card-text mb-0">{{ order.address_line_1 }}</p>
+				<p class="card-text mb-0">{{ order.city }}, {{ order.state }}</p>
+				<p class="card-text mb-0">{{ order.country  }}</p>
+				{% else %}
 				<p class="card-text mb-0">{{ order.shipping_address }}</p>
 				<p class="card-text mb-0">{{ order.shipping_city }}, {{ order.shipping_state }}</p>
 				<p class="card-text mb-0">{{ order.shipping_country  }}</p>
+				{% endif %}
             </div>
         </div>
 
@@ -103,9 +115,18 @@
 			</dl>
 			<hr>
 			<p class="text-center mb-3">
-				<img src="{% static 'images/misc/payments.png' %}" height="26">
+				<img src="{% static 'img/payments.png' %}" height="26">
 			</p>
-<!--			<a href="{% url 'checkout' %}"  > Make Payment </a>-->
+          <!-- Promo code -->
+			<form class="card p-2" action="{% url 'apply_coupon' order.id %}" method="POST">
+			  {% csrf_token %}
+            <div class="input-group">
+              <input type="text" name="coupon" class="form-control" placeholder="Promo code">
+              <div class="input-group-append">
+                <button class="btn btn-secondary btn-md waves-effect m-0" type="submit">Redeem</button>
+              </div>
+            </div>
+          	</form>
 			<form id="paymentForm">
 <!--			  <div class="form-group">-->
 <!--				<label for="email-address">Email Address</label>-->
@@ -119,7 +140,7 @@
 			<form onsubmit="makePayment()" id="payment-form">
 				<button type="button" onclick="makePayment(event)" value="Submit" class="btn btn-primary btn-block">Pay with Remitta</button>
            </form>
-			 <script type="text/javascript" src="https://remitademo.net/payment/v1/remita-pay-inline.bundle.js"></script>
+			 <script type="text/javascript" src="https://remitademo.net/payment/v1/remita-pay-inline.bundle.js"></script><br>
 		</div> <!-- card-body.// -->
 		</div> <!-- card.// -->
 
@@ -248,5 +269,4 @@ function payWithPaystack(e) {
 
 
   </script>
-
 {% endblock %}

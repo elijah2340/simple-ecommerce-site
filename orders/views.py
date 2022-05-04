@@ -1,27 +1,31 @@
 from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 import json
 from .process import html_to_pdf
 from accounts.models import UserProfile
 from django.http import HttpResponse
+from django.contrib import messages
 
 from cart.models import CartItem
-from .models import Order, Payment, OrderProduct
+from .models import Order, Payment, OrderProduct, PromoCode
 from .forms import OrderForm
 import datetime
 from django.conf import settings
 from django.http import JsonResponse
 from store.models import Product
-
-
+from django.views.decorators.csrf import csrf_exempt
+import stripe
+from django.urls import reverse
+from django_simple_coupons.validations import validate_coupon
+from django_simple_coupons.models import Coupon
 
 def paymentview(request, id):
     current_user = request.user
     order = Order.objects.get(user=current_user, id=id)
     cart_items = CartItem.objects.filter(user=current_user)
-    try :
+    try:
         body = json.loads(request.body)
         payment = Payment(
             user=current_user,
@@ -177,7 +181,7 @@ def placeorderview(request,  total=0, quantity=0):
         form = OrderForm(request.POST)
         if form.is_valid():
             data = Order()
-            data.user =current_user
+            data.user = current_user
             data.first_name = form.cleaned_data['first_name']
             data.last_name = form.cleaned_data['last_name']
             data.phone_number = form.cleaned_data['phone_number']
@@ -187,12 +191,14 @@ def placeorderview(request,  total=0, quantity=0):
             data.country = form.cleaned_data['country']
             data.state = form.cleaned_data['state']
             data.city = form.cleaned_data['city']
+            data.shipping_address_same_as_billing = form.cleaned_data['shipping_address_same_as_billing']
             data.shipping_address = form.cleaned_data['shipping_address']
             data.shipping_state = form.cleaned_data['shipping_state']
             data.shipping_city = form.cleaned_data['shipping_city']
             data.shipping_country = form.cleaned_data['shipping_country']
             data.shipping_fee = shipping_fee
             data.order_total = grand_total
+            data.total = grand_total
             data.ip = request.META.get('REMOTE_ADDR')
             data.save()
             profile.address_line_1 = form.cleaned_data['address_line_1']
@@ -220,13 +226,15 @@ def placeorderview(request,  total=0, quantity=0):
 
             order = Order.objects.get(user=current_user, is_ordered=False, order_number=order_number)
             paystack_pubkey = settings.PAYSTACK_PUBLIC_KEY
+            stripe_pubkey = settings.STRIPE_PUBLISHABLE_KEY
             context = {
                 'order': order,
                 'cart_items': cart_items,
                 'total': total,
                 'shipping_fee': shipping_fee,
-                'grand_total': grand_total,
-                'pk_key': paystack_pubkey
+                'grand_total': data.total,
+                'pk_key': paystack_pubkey,
+                'stripe_pubkey': stripe_pubkey,
             }
             return render(request, 'orders/payments.html', context)
 
@@ -234,3 +242,56 @@ def placeorderview(request,  total=0, quantity=0):
         return redirect('checkout')
 
 
+def apply_coupon(request, id):
+    user = UserProfile.objects.get(user=request.user)
+    cart_items = CartItem.objects.filter(user=request.user)
+    order = Order.objects.get(user=request.user, is_ordered=False, id=id)
+    paystack_pubkey = settings.PAYSTACK_PUBLIC_KEY
+    stripe_pubkey = settings.STRIPE_PUBLISHABLE_KEY
+
+    total = 0
+    quantity = 0
+    for cart_item in cart_items:
+        total += (cart_item.product.price * cart_item.quantity)
+        quantity += cart_item.quantity
+
+    if request.method == 'POST':
+        coupon_code = request.POST['coupon']
+        print(coupon_code)
+        status = validate_coupon(coupon_code=coupon_code, user=user.user)
+        if status['valid']:
+            coupon_code = Coupon.objects.get(code=coupon_code)
+            coupon_code.use_coupon(user=user.user)
+            order.coupon = request.POST['coupon']
+            order.order_total -= coupon_code.discount.value
+            order.save()
+            coupon_code.save()
+            messages.success(request, 'You have successfully applied a coupon on your order')
+            context = {
+                'order': order,
+                'cart_items': cart_items,
+                'total': total,
+                'pk_key': paystack_pubkey,
+                'stripe_pubkey': stripe_pubkey,
+            }
+            return render(request, 'orders/coupon_applied.html', context)
+        else:
+            messages.error(request, 'user has exceeded coupon use limit or coupon not valid')
+            context = {
+                'order': order,
+                'cart_items': cart_items,
+                'total': total,
+                'pk_key': paystack_pubkey,
+                'stripe_pubkey': stripe_pubkey,
+            }
+            return render(request, 'orders/coupon_applied.html', context)
+    else:
+
+        context = {
+            'order': order,
+            'cart_items': cart_items,
+            'total': total,
+            'pk_key': paystack_pubkey,
+            'stripe_pubkey': stripe_pubkey,
+        }
+        return render(request, 'orders/coupon_applied.html', context)

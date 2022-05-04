@@ -4,75 +4,232 @@
 
 {% block content %}
 
-<!-- ========================= SECTION MAIN ========================= -->
-<section class="section-intro padding-y-sm">
-<div class="container">
+<main id="content" role="main">
+            <!-- Slider Section -->
+            <div class="mb-5">
+                <div class="bg-img-hero" style="background-image: url({% static 'img/img1.jpg' %});">
+                    <div class="container min-height-420 overflow-hidden">
+                        <div class="js-slick-carousel u-slick"
+                            data-pagi-classes="text-center position-absolute right-0 bottom-0 left-0 u-slick__pagination u-slick__pagination--long justify-content-start mb-3 mb-md-4 offset-xl-3 pl-2 pb-1">
+                            {% for product in banner_slide %}
+                            <div class="js-slide bg-img-hero-center">
+                                <div class="row min-height-420 py-7 py-md-0">
+                                    <div class="offset-xl-3 col-xl-4 col-6 mt-md-8">
+                                        <h1 class="font-size-64 text-lh-57 font-weight-light"
+                                            data-scs-animation-in="fadeInUp">
+                                            THE NEW <span class="d-block font-size-55">STANDARD</span>
+                                        </h1>
+                                        <h6 class="font-size-15 font-weight-bold mb-3"
+                                            data-scs-animation-in="fadeInUp"
+                                            data-scs-animation-delay="200">UNDER {{ product.product.category}}
+                                        </h6>
+                                        <div class="mb-4"
+                                            data-scs-animation-in="fadeInUp"
+                                            data-scs-animation-delay="300">
+                                            <span class="font-size-13">FROM</span>
+                                            <div class="font-size-50 font-weight-bold text-lh-45">
+                                                <sup class="">₦</sup>{{ product.product.price }}<sup class="">99</sup>
+                                            </div>
+                                        </div>
+                                        <a href="{% url 'product_detail' product.product.category.cat_slug product.product.slug %}" class="btn btn-primary transition-3d-hover rounded-lg font-weight-normal py-2 px-md-7 px-3 font-size-16"
+                                            data-scs-animation-in="fadeInUp"
+                                            data-scs-animation-delay="400">
+                                            Start Buying
+                                        </a>
+                                    </div>
+                                    <div class="col-xl-5 col-6  d-flex align-items-center"
+                                        data-scs-animation-in="zoomIn"
+                                        data-scs-animation-delay="500">
+                                        <img class="img-fluid" src="{{ product.product.image.url }}" alt="{{ product.product }}">
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Slider Section -->
+            <div class="container">
+                <!-- Deals-and-tabs -->
+                <div class="mb-5">
+                    <div class="row">
+                        <!-- Deal -->
+                        <div class="col-md-auto mb-6 mb-md-0">
+                            {% for product in special_offer %}
+                            <div class="p-3 border border-width-2 border-primary borders-radius-20 bg-white min-width-370">
+                                <div class="d-flex justify-content-between align-items-center m-1 ml-2">
+                                    <h3 class="font-size-22 mb-0 font-weight-normal text-lh-28 max-width-120">Special Offer</h3>
+                                    <div class="d-flex align-items-center flex-column justify-content-center bg-primary rounded-pill height-75 width-75 text-lh-1">
+                                        <span class="font-size-12">Save</span>
+                                        <div class="font-size-20 font-weight-bold">₦2000</div>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <a href="{% url 'product_detail' product.product.category.cat_slug product.product.slug %}" class="d-block text-center"><img class="img-fluid" style="width:250px" src="{{ product.product.image.url }}" alt="{{ product.product}}"></a>
+                                </div>
+                                <h5 class="mb-2 font-size-14 text-center mx-auto max-width-180 text-lh-18"><a href="../shop/single-product-fullwidth.html" class="text-blue font-weight-bold">{{product.product}}</a></h5>
+                                <div class="d-flex align-items-center justify-content-center mb-3">
+                                    <del class="font-size-18 mr-2 text-gray-2">₦20,00</del>
+                                    <ins class="font-size-30 text-red text-decoration-none">₦{{ product.product.price }}</ins>
+                                </div>
+                                <div class="mb-3 mx-2">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="">Availavle: <strong>6</strong></span>
+                                        <span class="">Already Sold: <strong>28</strong></span>
+                                    </div>
+                                    <div class="rounded-pill bg-gray-3 height-20 position-relative">
+                                        <span class="position-absolute left-0 top-0 bottom-0 rounded-pill w-30 bg-primary"></span>
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <h6 class="font-size-15 text-gray-2 text-center mb-3">Hurry Up! Offer ends in:</h6>
+                                    <div class="js-countdown d-flex justify-content-center"
+                                        data-end-date="2022/07/31"
+                                        data-hours-format="%H"
+                                        data-minutes-format="%M"
+                                        data-seconds-format="%S">
+                                        <div class="text-lh-1">
+                                            <div class="text-gray-2 font-size-30 bg-gray-4 py-2 px-2 rounded-sm mb-2">
+                                                <span class="js-cd-hours"></span>
+                                            </div>
+                                            <div class="text-gray-2 font-size-12 text-center">HOURS</div>
+                                        </div>
+                                        <div class="mx-1 pt-1 text-gray-2 font-size-24">:</div>
+                                        <div class="text-lh-1">
+                                            <div class="text-gray-2 font-size-30 bg-gray-4 py-2 px-2 rounded-sm mb-2">
+                                                <span class="js-cd-minutes"></span>
+                                            </div>
+                                            <div class="text-gray-2 font-size-12 text-center">MINS</div>
+                                        </div>
+                                        <div class="mx-1 pt-1 text-gray-2 font-size-24">:</div>
+                                        <div class="text-lh-1">
+                                            <div class="text-gray-2 font-size-30 bg-gray-4 py-2 px-2 rounded-sm mb-2">
+                                                <span class="js-cd-seconds"></span>
+                                            </div>
+                                            <div class="text-gray-2 font-size-12 text-center">SECS</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <!-- End Deal -->
+                        <!-- Tab Prodcut -->
+                        <div class="col">
+                            <!-- Features Section -->
+                            <div class="">
+                                <!-- Nav Classic -->
+                                <div class="position-relative bg-white text-center z-index-2">
+                                    <ul class="nav nav-classic nav-tab justify-content-center" id="pills-tab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active " id="pills-one-example1-tab" data-toggle="pill" href="#pills-one-example1" role="tab" aria-controls="pills-one-example1" aria-selected="true">
+                                                <div class="d-md-flex justify-content-md-center align-items-md-center">
+                                                    Featured
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link " id="pills-two-example1-tab" data-toggle="pill" href="#pills-two-example1" role="tab" aria-controls="pills-two-example1" aria-selected="false">
+                                                <div class="d-md-flex justify-content-md-center align-items-md-center">
+                                                    On Sale
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- End Nav Classic -->
 
-<div class="intro-banner-wrap">
-	<img src="{% static 'images/banners/cover.jpg' %}" class="img-fluid rounded">
-</div>
-
-</div> <!-- container //  -->
-</section>
-<!-- ========================= SECTION MAIN END// ========================= -->
-
-<!-- ========================= SECTION  ========================= -->
-<section class="section-name padding-y-sm">
-<div class="container">
-
-<header class="section-heading">
-	<a href="{% url 'store' %}" class="btn btn-outline-primary float-right">See all</a>
-	<h3 class="section-title">Popular products</h3>
-</header><!-- sect-heading -->
-
-
-<div class="row">
-	{% for product in products %}
-	<div class="col-md-3">
-		<div class="card card-product-grid">
-			<a href="{% url 'product_detail' product.category.cat_slug product.slug %}" class="img-wrap"> <img src="{{ product.image.url }}"> </a>
-			<figcaption class="info-wrap">
-				<a href="{% url 'product_detail' product.category.cat_slug product.slug %}" class="title">{{ product.product_name }}</a>
-				<div class="rating-star">
-					<span>
-						<i class="fa fa-star{% if product.averageReview < 0.5 %}-o{% elif product.averageReview >= 0.5 and product.averageReview < 1%}-half-o{% endif %}" aria-hidden="true"></i>
-						<i class="fa fa-star{% if product.averageReview < 1.5 %}-o{% elif product.averageReview >= 1.5 and product.averageReview < 2 %}-half-o{% endif %}" aria-hidden="true"></i>
-						<i class="fa fa-star{% if product.averageReview < 2.5 %}-o{% elif product.averageReview >= 2.5 and product.averageReview < 3 %}-half-o{% endif %}" aria-hidden="true"></i>
-						<i class="fa fa-star{% if product.averageReview < 3.5 %}-o{% elif product.averageReview >= 3.5 and product.averageReview < 4 %}-half-o{% endif %}" aria-hidden="true"></i>
-						<i class="fa fa-star{% if product.averageReview < 4.5 %}-o{% elif product.averageReview >= 4.5 and product.averageReview < 5 %}-half-o{% endif %}" aria-hidden="true"></i>
-					</span><span>{{product.countReview }}</span> reviews
-				</div>
-				<div class="price mt-1">₦ {{ product.price }}</div> <!-- price-wrap.// -->
-				<a href="{% url 'product_detail' product.category.cat_slug product.slug %}" class="btn btn-block btn-primary">View Details </a>
-			</figcaption>
-		</div>
-	</div> <!-- col.// -->
-	{% endfor %}
-</div> <!-- row.// -->
-	<nav class="mt-4" aria-label="Page navigation sample">
-  <ul class="pagination">
-	  {% if products.has_other_pages %}
-
-	  {% if products.has_previous %}
-    <li class="page-item"><a class="page-link" href="?page={{ products.previous_page_number }}">Previous</a></li>
-	  {% endif %}
-	  {% for i in products.paginator.page_range %}
-	  	{% if products.number == i %}
-	  		<li class="page-item active"><a class="page-link" href="?pae={{ product.number }}">{{ i }}</a></li>
-	  	{% elif i > products.number|add:'-3' and i < products.number|add:'3' %}
-    		<li class="page-item "><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-	  	{% endif %}
-	  {% endfor %}
-	  {% if products.has_next %}
-    	<li class="page-item"><a class="page-link" href="?page={{ products.next_page_number }}">Next</a></li>
-	  {% endif %}
-	  <li class="page-item"><a class="page-link" href="?page={{ products.paginator.num_pages }}">Last</a></li>
-	  {% endif %}
-  </ul>
-</nav>
-
-</div><!-- container // -->
-
-</section>
-<!-- ========================= SECTION  END// ========================= -->
+                                <!-- Tab Content -->
+                                <div class="tab-content" id="pills-tabContent">
+                                    <div class="tab-pane fade pt-2 show active" id="pills-one-example1" role="tabpanel" aria-labelledby="pills-one-example1-tab">
+                                        <ul class="row list-unstyled products-group no-gutters">
+                                            {% for product in featured_products %}
+                                            <li class="col-6 col-wd-3 col-md-4 product-item">
+                                                <div class="product-item__outer h-100">
+                                                    <div class="product-item__inner px-xl-4 p-3">
+                                                        <div class="product-item__body pb-xl-2">
+                                                            <div class="mb-2"><a href="{% url 'product_by_category' product.product.category.cat_slug %}" class="font-size-12 text-gray-5">{{ product.product.category }}</a></div>
+                                                            <h5 class="mb-1 product-item__title"><a href="{% url 'product_detail' product.product.category.cat_slug product.product.slug %}" class="text-blue font-weight-bold">{{ product.product }}</a></h5>
+                                                            <div class="mb-2">
+                                                                <a href="{% url 'product_detail' product.product.category.cat_slug product.product.slug %}" class="d-block text-center"><img class="img-fluid" src="{{ product.product.image.url }}" alt="{{ product.product }}"></a>
+                                                            </div>
+                                                            <div class="flex-center-between mb-1">
+                                                                <div class="prodcut-price">
+                                                                    <div class="text-gray-100">₦{{ product.product.price }}</div>
+                                                                </div>
+                                                                <div class="d-none d-xl-block prodcut-add-cart">
+                                                                    <a href="{% url 'add_to_cart' product.product.id %}" class="btn-add-cart btn-primary transition-3d-hover"><i class="ec ec-add-to-cart"></i></a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="product-item__footer">
+                                                            <div class="border-top pt-2 flex-center-between flex-wrap rating-star">
+                                                                <span>
+                                                                <i class="{% if product.product.averageReview < 0.5 %}far fa-star{% elif product.product.averageReview >= 0.5 and product.product.averageReview < 1 %}fas fa-star-half{% else %}fas fa-star{% endif %}" aria-hidden="true"></i>
+                                                                <i class="{% if product.product.averageReview > 1 and product.product.averageReview <= 1.5  %}fas fa-star-half{% elif product.product.averageReview > 1.5 %}fas fa-star{% else %}far fa-star{% endif %}" aria-hidden="true"></i>
+                                                                <i class="{% if product.product.averageReview > 2 and product.product.averageReview <= 2.5  %}fas fa-star-half{% elif product.product.averageReview >= 2.5 %}fas fa-star{% else %}far fa-star{% endif %}" aria-hidden="true"></i>
+                                                                <i class="{% if product.product.averageReview > 3 and product.product.averageReview <= 3.5  %}fas fa-star-half{% elif product.product.averageReview >= 3.5 %}fas fa-star{% else %}far fa-star{% endif %}" aria-hidden="true"></i>
+                                                                <i class="{% if product.product.averageReview > 4 and product.product.averageReview <= 4.5  %}fas fa-star-half{% elif product.product.averageReview >= 4.5 %}fas fa-star{% else %}far fa-star{% endif %}" aria-hidden="true"></i>
+                                                                </span>
+                                                                <span>{{product.product.countReview }}</span> reviews
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    <div class="tab-pane fade pt-2" id="pills-two-example1" role="tabpanel" aria-labelledby="pills-two-example1-tab">
+                                        <ul class="row list-unstyled products-group no-gutters">
+                                            {% for product in products %}
+                                            <li class="col-6 col-wd-3 col-md-4 product-item">
+                                                <div class="product-item__outer h-100">
+                                                    <div class="product-item__inner px-xl-4 p-3">
+                                                        <div class="product-item__body pb-xl-2">
+                                                            <div class="mb-2"><a href="{% url 'product_by_category' product.category.cat_slug %}" class="font-size-12 text-gray-5">{{ product.category }}</a></div>
+                                                            <h5 class="mb-1 product-item__title"><a href="{% url 'product_detail' product.category.cat_slug product.slug %}" class="text-blue font-weight-bold">{{ product }}</a></h5>
+                                                            <div class="mb-2">
+                                                                <a href="{% url 'product_detail' product.category.cat_slug product.slug %}" class="d-block text-center"><img class="img-fluid" src="{{ product.image.url }}" alt="{{ product }}"></a>
+                                                            </div>
+                                                            <div class="flex-center-between mb-1">
+                                                                <div class="prodcut-price">
+                                                                    <div class="text-gray-100">₦{{ product.price }}</div>
+                                                                </div>
+                                                                <div class="d-none d-xl-block prodcut-add-cart">
+                                                                    <a href="{% url 'add_to_cart' product.id %}" class="btn-add-cart btn-primary transition-3d-hover"><i class="ec ec-add-to-cart"></i></a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="product-item__footer">
+                                                            <div class="border-top pt-2 flex-center-between flex-wrap rating-star">
+                                                                <span>
+                                                                <i class="{% if product.averageReview < 0.5 %}far fa-star{% elif product.product.averageReview >= 0.5 and product.product.averageReview < 1 %}fas fa-star-half{% else %}fas fa-star{% endif %}" aria-hidden="true"></i>
+                                                                <i class="{% if product.averageReview > 1 and product.averageReview <= 1.5  %}fas fa-star-half{% elif product.averageReview > 1.5 %}fas fa-star{% else %}far fa-star{% endif %}" aria-hidden="true"></i>
+                                                                <i class="{% if product.averageReview > 2 and product.averageReview <= 2.5  %}fas fa-star-half{% elif product.averageReview >= 2.5 %}fas fa-star{% else %}far fa-star{% endif %}" aria-hidden="true"></i>
+                                                                <i class="{% if product.averageReview > 3 and product.averageReview <= 3.5  %}fas fa-star-half{% elif product.averageReview >= 3.5 %}fas fa-star{% else %}far fa-star{% endif %}" aria-hidden="true"></i>
+                                                                <i class="{% if product.averageReview > 4 and product.averageReview <= 4.5  %}fas fa-star-half{% elif product.averageReview >= 4.5 %}fas fa-star{% else %}far fa-star{% endif %}" aria-hidden="true"></i>
+                                                                </span>
+                                                                <span>{{product.countReview }}</span> reviews
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!-- End Tab Content -->
+                            </div>
+                            <!-- End Features Section -->
+                        </div>
+                        <!-- End Tab Prodcut -->
+                    </div>
+                </div>
+                <!-- End Deals-and-tabs -->
+            </div>
+            <!-- Products-4-1-4 -->
+</main>
 {% endblock %}

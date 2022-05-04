@@ -3,192 +3,440 @@
 {% load static %}
 {% block content %}
 
-<section class="section-content padding-y bg">
-<div class="container">
+<!-- ========== MAIN CONTENT ========== -->
+        <main id="content" role="main">
+            <!-- breadcrumb -->
+            <div class="bg-gray-13 bg-md-transparent">
+                <div class="container">
+                    {% include 'includes/alert.html' %}
+                    <!-- breadcrumb -->
+                    <div class="my-md-3">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb mb-3 flex-nowrap flex-xl-wrap overflow-auto overflow-xl-visble">
+                                <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a href="{% url 'home' %}">Home</a></li>
+                                <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a href="{% url 'product_by_category' product.category.cat_slug %}">{{ product.category }}</a></li>
+                                <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1 active" aria-current="page"><a href="#">{{ product}}</a></li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <!-- End breadcrumb -->
+                </div>
+            </div>
+            <!-- End breadcrumb -->
 
-<!-- ============================ COMPONENT 1 ================================= -->
-<div class="card">
-	<div class="row no-gutters">
-		<aside class="col-md-6">
-<article class="gallery-wrap">
-	<div class="img-big-wrap mainImage">
-		<center><img src="{{ product.image.url }}"></center>
-	</div> <!-- img-big-wrap.// -->
+            <div class="container">
+                <!-- Single Product Body -->
+                <div class="mb-14">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-4 col-xl-5 mb-4 mb-md-0">
+                            <div id="sliderSyncingNav" class="js-slick-carousel u-slick mb-2"
+                                data-infinite="true"
+                                data-arrows-classes="d-none d-lg-inline-block u-slick__arrow-classic u-slick__arrow-centered--y rounded-circle"
+                                data-arrow-left-classes="fas fa-arrow-left u-slick__arrow-classic-inner u-slick__arrow-classic-inner--left ml-lg-2 ml-xl-4"
+                                data-arrow-right-classes="fas fa-arrow-right u-slick__arrow-classic-inner u-slick__arrow-classic-inner--right mr-lg-2 mr-xl-4"
+                                data-nav-for="#sliderSyncingThumb">
+                                <div class="js-slide">
+                                    <img class="img-fluid" src="{{ product.image.url }}" alt="{{ product }}">
+                                </div>
+                                {% for image in product_gallery %}
+                                <div class="js-slide">
+                                    <img class="img-fluid" src="{{ image.image.url }}" alt="{{ product }}">
+                                </div>
+                                {% endfor %}
+                            </div>
 
-</article> <!-- gallery-wrap .end// -->
-			<ul class="thumb">
-				<li>
-					<a href="{{ product.image.url }}" target="mainImage"><img src="{{ product.image.url }}" alt="Product Image"></a>
-					{% for image in product_gallery %}
-					<a href="{{ image.image.url }}" target="mainImage"><img src="{{ image.image.url }}" alt="Product Image"></a>
-					{% endfor %}
-				</li>
-			</ul>
-		</aside>
-	<main class="col-md-6 border-left">
-	<form action="{% url 'add_to_cart' product.id %}" method="POST">
-		{% csrf_token %}
+                            <div id="sliderSyncingThumb" class="js-slick-carousel u-slick u-slick--slider-syncing u-slick--slider-syncing-size u-slick--gutters-1 u-slick--transform-off"
+                                data-infinite="true"
+                                data-slides-show="5"
+                                data-is-thumbs="true"
+                                data-nav-for="#sliderSyncingNav">
+                                <div class="js-slide" style="cursor: pointer;">
+                                    <img class="img-fluid" src="{{ product.image.url }}" alt="{{ product }}">
+                                </div>
+                                {% for image in product_gallery %}
+                                <div class="js-slide" style="cursor: pointer;">
+                                    <img class="img-fluid" src="{{ image.image.url }}" alt="{{ product }}">
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 col-xl-4 mb-md-6 mb-lg-0">
+                            <div class="mb-2">
+                                <a href="#" class="font-size-12 text-gray-5 mb-2 d-inline-block">{{ product.category }}</a>
+                                <h2 class="font-size-25 text-lh-1dot2">{{ product }}</h2>
+                                <div class="mb-2">
+                                    <a class="d-inline-flex align-items-center small font-size-15 text-lh-1" href="#">
+                                        <div class="text-warning mr-2">
+                                            <span>
+                                                <i class="{% if product.averageReview < 0.5 %}far fa-star{% elif product.averageReview >= 0.5 and product.product.averageReview < 1 %}fas fa-star-half{% else %}fas fa-star{% endif %}" aria-hidden="true"></i>
+                                                <i class="{% if product.averageReview > 1 and product.averageReview <= 1.5  %}fas fa-star-half{% elif product.averageReview > 1.5 %}fas fa-star{% else %}far fa-star{% endif %}" aria-hidden="true"></i>
+                                                <i class="{% if product.averageReview > 2 and product.averageReview <= 2.5  %}fas fa-star-half{% elif product.averageReview >= 2.5 %}fas fa-star{% else %}far fa-star{% endif %}" aria-hidden="true"></i>
+                                                <i class="{% if product.averageReview > 3 and product.averageReview <= 3.5  %}fas fa-star-half{% elif product.averageReview >= 3.5 %}fas fa-star{% else %}far fa-star{% endif %}" aria-hidden="true"></i>
+                                                <i class="{% if product.averageReview > 4 and product.averageReview <= 4.5  %}fas fa-star-half{% elif product.averageReview >= 4.5 %}fas fa-star{% else %}far fa-star{% endif %}" aria-hidden="true"></i>
+                                            </span>
+                                        </div>
+                                        <span class="text-secondary font-size-13">({{ product.countReview }} customer reviews)</span>
+                                    </a>
+                                </div>
+                                <a href="#" class="d-inline-block max-width-150 ml-n2 mb-2"><img class="img-fluid" src="../../assets/img/200X60/img1.png" alt="Image Description"></a>
+                                <div class="mb-2">
+                                    <ul class="font-size-14 pl-3 ml-1 text-gray-110">
+                                        {% if product.key_spec1 %}
+                                        <li>{{product.key_spec1}}</li>
+                                        {% endif %}
+                                        {% if product.key_spec2 %}
+                                        <li>{{product.key_spec2}}</li>
+                                        {% endif %}
+                                        {% if product.key_spec3 %}
+                                        <li>{{product.key_spec3}}</li>
+                                        {% endif %}
+                                        {% if product.key_spec4 %}
+                                        <li>{{product.key_spec4}}</li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>
+                                <p><strong>SKU</strong>: FW511948218</p>
+                            </div>
+                        </div>
+                        <div class="mx-md-auto mx-lg-0 col-md-6 col-lg-4 col-xl-3">
+                            <form action="{% url 'add_to_cart' product.id %}" method="POST">
+		                    {% csrf_token %}
+                                <div class="mb-2">
+                                    <div class="card p-5 border-width-2 border-color-1 borders-radius-17">
+                                        <div class="text-gray-9 font-size-14 pb-2 border-color-1 border-bottom mb-3">Availability: <span class="text-green font-weight-bold">{{product.stock}} in stock</span></div>
+                                        <div class="mb-3">
+                                            <div class="font-size-36">₦{{ product.price }}</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            {% if product.variation_set.color %}
+                                            <h6 class="font-size-14">Color</h6>
+                                            <!-- Select -->
+                                            <select name="color" class="js-select selectpicker dropdown-select btn-block col-12 px-0"
+                                                data-style="btn-sm bg-white font-weight-normal py-2 border">
+                                                <option value="one" selected>Select colour</option>
+                                                {% for i in product.variation_set.color %}
+                                                <option value="{{ i.variation_value }}">{{ i.variation_value | capfirst }}</option>
+                                                {% endfor %}
 
-		<article class="content-body">
+                                            </select>
+                                            <!-- End Select -->
+                                            {% endif %}
+                                            {% if product.variation_set.size %}
+                                            <h6 class="font-size-14">Size</h6>
+                                            <!-- Select -->
+                                            <select name="size" class="js-select selectpicker dropdown-select btn-block col-12 px-0"
+                                                data-style="btn-sm bg-white font-weight-normal py-2 border">
+                                                <option value="one" selected>Select Size</option>
+                                                {% for i in product.variation_set.size %}
+                                                <option value="{{ i.variation_value }}">{{ i.variation_value | capfirst }}</option>
+                                                {% endfor %}
 
-		<h2 class="title">{{ product.product_name}}</h2>
-		<div class="rating-star">
-		<span>
-			<i class="fa fa-star{% if product.averageReview < 0.5 %}-o{% elif product.averageReview >= 0.5 and product.averageReview < 1%}-half-o{% endif %}" aria-hidden="true"></i>
-			<i class="fa fa-star{% if product.averageReview < 1.5 %}-o{% elif product.averageReview >= 1.5 and product.averageReview < 2 %}-half-o{% endif %}" aria-hidden="true"></i>
-			<i class="fa fa-star{% if product.averageReview < 2.5 %}-o{% elif product.averageReview >= 2.5 and product.averageReview < 3 %}-half-o{% endif %}" aria-hidden="true"></i>
-			<i class="fa fa-star{% if product.averageReview < 3.5 %}-o{% elif product.averageReview >= 3.5 and product.averageReview < 4 %}-half-o{% endif %}" aria-hidden="true"></i>
-			<i class="fa fa-star{% if product.averageReview < 4.5 %}-o{% elif product.averageReview >= 4.5 and product.averageReview < 5 %}-half-o{% endif %}" aria-hidden="true"></i>
-		</span><span>{{product.countReview }}</span> reviews
-		</div>
+                                            </select>
+                                            <!-- End Select -->
+                                            {% endif %}
+                                        </div>
+                                        <div class="mb-2 pb-0dot5">
+                                            {% if product.stock < 1 %}
+                                            <a href="#" class="btn btn-block btn-primary-dark"><i class="ec ec-add-to-cart mr-2 font-size-20"></i> Out Of Stock</a>
+                                            {% else %}
+                                            <button type="submit" class="btn btn-block btn-primary-dark"><i class="ec ec-add-to-cart mr-2 font-size-20"></i> Add to Cart</button>
+                                            {% endif %}
+                                        </div>
+                                           {% if in_cart %}
+                                        <div class="mb-3">
+                                            <a href="{% url 'cart' %}" class="btn btn-block btn-dark">View cart<i class="fas fa-eye"></i></a>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Single Product Body -->
+            </div>
+            <!-- Single Product Tab -->
+                <div class="mb-8">
+                    <div class="position-relative position-md-static px-md-6">
+                        <ul class="nav nav-classic nav-tab nav-tab-lg justify-content-xl-center flex-nowrap flex-xl-wrap overflow-auto overflow-xl-visble border-0 pb-1 pb-xl-0 mb-n1 mb-xl-0" id="pills-tab-8" role="tablist">
 
-		<div class="mb-3">
-			<var class="price h4">₦ {{product.price}}</var>
-		</div>
+                            <li class="nav-item flex-shrink-0 flex-xl-shrink-1 z-index-2">
+                                <a class="nav-link active" id="Jpills-two-example1-tab" data-toggle="pill" href="#Jpills-two-example1" role="tab" aria-controls="Jpills-two-example1" aria-selected="false">Description</a>
+                            </li>
+                            <li class="nav-item flex-shrink-0 flex-xl-shrink-1 z-index-2">
+                                <a class="nav-link" id="Jpills-three-example1-tab" data-toggle="pill" href="#Jpills-three-example1" role="tab" aria-controls="Jpills-three-example1" aria-selected="false">Specification</a>
+                            </li>
+                            <li class="nav-item flex-shrink-0 flex-xl-shrink-1 z-index-2">
+                                <a class="nav-link" id="Jpills-four-example1-tab" data-toggle="pill" href="#Jpills-four-example1" role="tab" aria-controls="Jpills-four-example1" aria-selected="false">Reviews</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Tab Content -->
+                    <div class="borders-radius-17 border p-4 mt-4 mt-md-0 px-lg-10 py-lg-9">
+                        <div class="tab-content" id="Jpills-tabContent">
+                            <div class="tab-pane fade active show" id="Jpills-two-example1" role="tabpanel" aria-labelledby="Jpills-two-example1-tab">
+                                <h3 class="font-size-24 mb-3">Perfectly Done</h3>
+                                <p>Praesent ornare, ex a interdum consectetur, lectus diam sodales elit, vitae egestas est enim ornare nisl. Nullam in lectus nec sem semper viverra. In lobortis egestas massa. Nam nec massa nisi. Suspendisse potenti. Quisque suscipit vulputate dui quis volutpat. Ut id elit facilisis, feugiat est in, tempus lacus. Ut ultrices dictum metus, a ultricies ex vulputate ac. Ut id cursus tellus, non tempor quam. Morbi porta diam nisi, id finibus nunc tincidunt eu.</p>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="pt-lg-8 pt-xl-10">
+                                            <h3 class="font-size-24 mb-3">Wireless</h3>
+                                            <p class="mb-6">Fusce vitae nibh mi. Integer posuere, libero et ullamcorper facilisis, enim eros tincidunt orci, eget vestibulum sapien nisi ut leo. Cras finibus vel est ut mollis. Donec luctus condimentum ante et euismod.</p>
+                                            <h3 class="font-size-24 mb-3">Fresh Design</h3>
+                                            <p class="mb-6">Integer bibendum aliquet ipsum, in ultrices enim sodales sed. Quisque ut urna vitae lacus laoreet malesuada eu at massa. Pellentesque nibh augue, pellentesque nec dictum vel, pretium a arcu. Duis eu urna suscipit, lobortis elit quis, ullamcorper massa.</p>
+                                            <h3 class="font-size-24 mb-3">Fabolous Sound</h3>
+                                            <p class="mb-6">Cras rutrum, nibh a sodales accumsan, elit sapien ultrices sapien, eget semper lectus ex congue elit. Nullam dui elit, fermentum a varius at, iaculis non dolor. In hac habitasse platea dictumst.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 text-right">
+                                        <img class="img-fluid mr-n4 mr-lg-n10" src="../../assets/img/580X580/img1.jpg" alt="Image Description">
+                                    </div>
+                                    <div class="col-md-6 text-left">
+                                        <img class="img-fluid ml-n4 ml-lg-n10" src="../../assets/img/580X580/img2.jpg" alt="Image Description">
+                                    </div>
+                                    <div class="col-md-6 align-self-center">
+                                        <div class="pt-lg-8 pt-xl-10 text-right">
+                                            <h3 class="font-size-24 mb-3">Inteligent Bass</h3>
+                                            <p class="mb-6">Fusce vitae nibh mi. Integer posuere, libero et ullamcorper facilisis, enim eros tincidunt orci, eget vestibulum sapien nisi ut leo. Cras finibus vel est ut mollis. Donec luctus condimentum ante et euismod.</p>
+                                            <h3 class="font-size-24 mb-3">Battery Life</h3>
+                                            <p class="mb-6">Integer bibendum aliquet ipsum, in ultrices enim sodales sed. Quisque ut urna vitae lacus laoreet malesuada eu at massa. Pellentesque nibh augue, pellentesque nec dictum vel, pretium a arcu. Duis eu urna suscipit, lobortis elit quis, ullamcorper massa.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul class="nav flex-nowrap flex-xl-wrap overflow-auto overflow-xl-visble">
+                                    <li class="nav-item text-gray-111 flex-shrink-0 flex-xl-shrink-1"><strong>SKU:</strong> <span class="sku">FW511948218</span></li>
+                                    <li class="nav-item text-gray-111 mx-3 flex-shrink-0 flex-xl-shrink-1">/</li>
+                                    <li class="nav-item text-gray-111 flex-shrink-0 flex-xl-shrink-1"><strong>Category:</strong> <a href="#" class="text-blue">Headphones</a></li>
+                                    <li class="nav-item text-gray-111 mx-3 flex-shrink-0 flex-xl-shrink-1">/</li>
+                                    <li class="nav-item text-gray-111 flex-shrink-0 flex-xl-shrink-1"><strong>Tags:</strong> <a href="#" class="text-blue">Fast</a>, <a href="#" class="text-blue">Gaming</a>, <a href="#" class="text-blue">Strong</a></li>
+                                </ul>
+                            </div>
+                            <div class="tab-pane fade" id="Jpills-three-example1" role="tabpanel" aria-labelledby="Jpills-three-example1-tab">
+                                <div class="mx-md-5 pt-1">
+                                    <div class="table-responsive mb-4">
+                                        <table class="table table-hover">
+                                            <tbody>
+                                                <tr>
+                                                    <th class="px-4 px-xl-5 border-top-0">Weight</th>
+                                                    <td class="border-top-0">7.25kg</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="px-4 px-xl-5">Dimensions</th>
+                                                    <td>90 x 60 x 90 cm</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="px-4 px-xl-5">Size</th>
+                                                    <td>One Size Fits all</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="px-4 px-xl-5">color</th>
+                                                    <td>Black with Red, White with Gold</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="px-4 px-xl-5">Guarantee</th>
+                                                    <td>5 years</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <h3 class="font-size-18 mb-4">Technical Specifications</h3>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <tbody>
+                                                <tr>
+                                                    <th class="px-4 px-xl-5 border-top-0">Brand</th>
+                                                    <td class="border-top-0">Apple</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="px-4 px-xl-5">Item Height</th>
+                                                    <td>18 Millimeters</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="px-4 px-xl-5">Item Width</th>
+                                                    <td>31.4 Centimeters</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="px-4 px-xl-5">Screen Size</th>
+                                                    <td>13 Inches</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="px-4 px-xl-5">Item Weight</th>
+                                                    <td>1.6 Kg</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="px-4 px-xl-5">Product Dimensions</th>
+                                                    <td>21.9 x 31.4 x 1.8 cm</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="px-4 px-xl-5">Item model number</th>
+                                                    <td>MF841HN/A</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="px-4 px-xl-5">Processor Brand</th>
+                                                    <td>Intel</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="px-4 px-xl-5">Processor Type</th>
+                                                    <td>Core i5</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="px-4 px-xl-5">Processor Speed</th>
+                                                    <td>2.9 GHz</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="px-4 px-xl-5">RAM Size</th>
+                                                    <td>8 GB</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="px-4 px-xl-5">Hard Drive Size</th>
+                                                    <td>512 GB</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="px-4 px-xl-5">Hard Disk Technology</th>
+                                                    <td>Solid State Drive</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="px-4 px-xl-5">Graphics Coprocessor</th>
+                                                    <td>Intel Integrated Graphics</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="px-4 px-xl-5">Graphics Card Description</th>
+                                                    <td>Integrated Graphics Card</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="px-4 px-xl-5">Hardware Platform</th>
+                                                    <td>Mac</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="px-4 px-xl-5">Operating System</th>
+                                                    <td>Mac OS</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="px-4 px-xl-5">Average Battery Life (in hours)</th>
+                                                    <td>9</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="Jpills-four-example1" role="tabpanel" aria-labelledby="Jpills-four-example1-tab">
+                                <div class="row mb-8">
+                                    <div class="col-md-6">
+                                        <h3 class="font-size-18 mb-5">Rate this product</h3>
+                                        <!-- Form -->
+                                        <form class="js-validate" action="{% url 'review' product.id %} " method="POST">
+                                            {% csrf_token %}
+                                            <div class="row align-items-center mb-4">
+                                                <div class="col-md-4 col-lg-3">
+                                                    <label for="rating" class="form-label mb-0">Your Rating*</label>
+                                                </div>
+                                                <div class="rate" id="rating">
+                                                    <input type="radio" name="rating" id="rating10" value="5" required><label for="rating10" title="5"></label>
+                                                    <input type="radio" name="rating" id="rating9" value="4.5" required><label for="rating9" title="4.5" class="half" ></label>
+                                                    <input type="radio" name="rating" id="rating8" value="4" required><label for="rating8" title="4"></label>
+                                                    <input type="radio" name="rating" id="rating7" value="3.5" required><label for="rating7" title="3.5" class="half"></label>
+                                                    <input type="radio" name="rating" id="rating6" value="3" required><label for="rating6" title="3"></label>
+                                                    <input type="radio" name="rating" id="rating5" value="2.5" required><label for="rating5" title="2.5" class="half"></label>
+                                                    <input type="radio" name="rating" id="rating4" value="2" required><label for="rating4" title="2"></label>
+                                                    <input type="radio" name="rating" id="rating3" value="1.5" required><label for="rating3" title="1.5" class="half"></label>
+                                                    <input type="radio" name="rating" id="rating2" value="1" required><label for="rating2" title="1"></label>
+                                                    <input type="radio" name="rating" id="rating1" value="0.5" required><label for="rating1" title="0.5" class="half"></label>
+                                                </div><br>
+                                            </div>
+                                            <div class="js-form-message form-group mb-3 row">
+                                                <div class="col-md-4 col-lg-3">
+                                                    <label for="inputName" class="form-label">Review Title</label>
+                                                </div>
+                                                <div class="col-md-8 col-lg-9">
+                                                    <input type="text" class="form-control" name="subject" id="inputName" aria-label="Alex Hecker">
+                                                </div>
+                                            </div>
+                                            <div class="js-form-message form-group mb-3 row">
+                                                <div class="col-md-4 col-lg-3">
+                                                    <label for="descriptionTextarea" class="form-label">Your Review</label>
+                                                </div>
+                                                <div class="col-md-8 col-lg-9">
+                                                    <textarea name="review" class="form-control" rows="3" id="descriptionTextarea"
+                                                    data-msg="Please enter your message."
+                                                    data-error-class="u-has-error"
+                                                    data-success-class="u-has-success"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="offset-md-4 offset-lg-3 col-auto">
+                                                    {% if user.is_authenticated %}
+                                                    {% if orderproduct %}
+                                                    <button type="submit" value="Submit Review" class="btn btn-primary-dark btn-wide transition-3d-hover">Add Review</button>
+                                                    {% else %}
+                                                    <p>You must Purchase this Product to post reviews. <span><a href="{% url 'add_to_cart' product.id %}">Buy now</a></span></p>
+                                                    {% endif %}
+                                                    {% else %}
+                                                    <p>Log in to post reviews. <span><a href="{% url 'login' %}">Login now</a></span></p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <!-- End Form -->
+                                    </div>
+                                </div>
+                                <!-- Review -->
+                                <div class="border-bottom border-color-1 pb-4 mb-4">
+                                    <!-- Review Rating -->
+                                    <h3>Customer Reviews </h3>
+                                    <span>Average Review: {{product.averageReview}}</span> out of <span>{{product.countReview }}</span> reviews
+                                    <div class="rating-star">
+                                        <span>
+                                            <i class="{% if product.averageReview < 0.5 %}far fa-star{% elif product.averageReview >= 0.5 and product.product.averageReview < 1 %}fas fa-star-half{% else %}fas fa-star{% endif %}" aria-hidden="true"></i>
+                                            <i class="{% if product.averageReview > 1 and product.averageReview <= 1.5  %}fas fa-star-half{% elif product.averageReview > 1.5 %}fas fa-star{% else %}far fa-star{% endif %}" aria-hidden="true"></i>
+                                            <i class="{% if product.averageReview > 2 and product.averageReview <= 2.5  %}fas fa-star-half{% elif product.averageReview >= 2.5 %}fas fa-star{% else %}far fa-star{% endif %}" aria-hidden="true"></i>
+                                            <i class="{% if product.averageReview > 3 and product.averageReview <= 3.5  %}fas fa-star-half{% elif product.averageReview >= 3.5 %}fas fa-star{% else %}far fa-star{% endif %}" aria-hidden="true"></i>
+                                            <i class="{% if product.averageReview > 4 and product.averageReview <= 4.5  %}fas fa-star-half{% elif product.averageReview >= 4.5 %}fas fa-star{% else %}far fa-star{% endif %}" aria-hidden="true"></i>
+                                        </span>
+                                    </div>
+                                    <!-- End Review Rating -->
+                                </div>
+                                <!-- End Review -->
+                                <!-- Review -->
+                                {% for review in reviews %}
 
-		<p>{{product.description}}</p>
-
-
-		<hr>
-			<div class="row">
-				{% if product.variation_set.color %}
-				<div class="item-option-select">
-					<h6>Choose Color</h6>
-					<select class="form-control" name="color" required>
-						<option value="" >Choose Color</option>
-						{% for i in product.variation_set.color %}
-						<option value="{{ i.variation_value }}" >{{ i.variation_value | capfirst }}</option>
-						{% endfor %}
-					</select>
-				</div>
-				{% endif %}
-			</div> <!-- row.// -->
-			<div class="row">
-				{% if product.variation_set.color %}
-				<div class="item-option-select">
-					<h6>Select Size</h6>
-					<select class="form-control" name="size" required>
-						<option value="" >Select Size</option>
-						{% for i in product.variation_set.size %}
-						<option value="{{ i.variation_value }}" >{{ i.variation_value | capfirst }}</option>
-						{% endfor %}
-					</select>
-				</div>
-				{% endif %}
-			</div> <!-- row.// -->
-			<hr>
-			{% if product.stock < 1 %}
-			<h5 class="text-danger">Out Of Stock</h5>
-			{% else %}
-			<button type="submit" class="btn  btn-primary"> <span class="text">Add to cart</span> <i class="fas fa-shopping-cart"></i>  </button>
-			{% if in_cart %}
-			<a href="{% url 'cart' %}" class="btn  btn-outline-primary"> <span class="text">View cart</span> <i class="fas fa-eye"></i>  </a>
-			{% endif %}
-			{% endif %}
-		</article> <!-- product-info-aside .// -->
-	</form>
-		</main> <!-- col.// -->
-	</div> <!-- row.// -->
-</div> <!-- card.// -->
-<!-- ============================ COMPONENT 1 END .// ================================= -->
-
-<br>
-
-<div class="row">
-			<div class="col-md-9">
-
-
-	<form action="{% url 'review' product.id %} " method="POST">
-		{% csrf_token %}
-		<h5>Write A Review</h5>
-
-		<div>
-<!--			rating stars-->
-			<label>Whats your rating for this product?</label><br>
-
-			<div class="rate">
-				<input type="radio" name="rating" id="rating10" value="5" required><label for="rating10" title="5"></label>
-				<input type="radio" name="rating" id="rating9" value="4.5" required><label for="rating9" title="4.5" class="half" ></label>
-				<input type="radio" name="rating" id="rating8" value="4" required><label for="rating8" title="4"></label>
-				<input type="radio" name="rating" id="rating7" value="3.5" required><label for="rating7" title="3.5" class="half"></label>
-				<input type="radio" name="rating" id="rating6" value="3" required><label for="rating6" title="3"></label>
-				<input type="radio" name="rating" id="rating5" value="2.5" required><label for="rating5" title="2.5" class="half"></label>
-				<input type="radio" name="rating" id="rating4" value="2" required><label for="rating4" title="2"></label>
-				<input type="radio" name="rating" id="rating3" value="1.5" required><label for="rating3" title="1.5" class="half"></label>
-				<input type="radio" name="rating" id="rating2" value="1" required><label for="rating2" title="1"></label>
-				<input type="radio" name="rating" id="rating1" value="0.5" required><label for="rating1" title="0.5" class="half"></label>
-			</div><br>
-
-			Review Title:
-			<input type="text" class="form-control" name="subject"><br>
-			Review:
-			<textarea name="review" class="form-control" rows="4"></textarea><br>
-
-			{% if user.is_authenticated %}
-			{% if orderproduct %}
-			<input type="submit" value="Submit Review" class="btn btn-primary">
-			{% else %}
-			<p>You must Purchase this Product to post reviews. <span><a href="{% url 'add_to_cart' product.id %}">Buy now</a></span></p>
-			{% endif %}
-			{% else %}
-			<p>Log in to post reviews. <span><a href="{% url 'login' %}">Login now</a></span></p>
-			{% endif %}
-
-		</div><br>
-		{% include 'includes/alert.html' %}
-
-	</form>
-	<header class="section-heading">
-		<h3>Customer Reviews </h3>
-		<span>Average Review: {{product.averageReview}}</span> out of <span>{{product.countReview }}</span> reviews
-		<div class="rating-star">
-			<span>
-				<i class="fa fa-star{% if product.averageReview < 0.5 %}-o{% elif product.averageReview >= 0.5 and product.averageReview < 1%}-half-o{% endif %}" aria-hidden="true"></i>
-				<i class="fa fa-star{% if product.averageReview < 1.5 %}-o{% elif product.averageReview >= 1.5 and product.averageReview < 2 %}-half-o{% endif %}" aria-hidden="true"></i>
-				<i class="fa fa-star{% if product.averageReview < 2.5 %}-o{% elif product.averageReview >= 2.5 and product.averageReview < 3 %}-half-o{% endif %}" aria-hidden="true"></i>
-				<i class="fa fa-star{% if product.averageReview < 3.5 %}-o{% elif product.averageReview >= 3.5 and product.averageReview < 4 %}-half-o{% endif %}" aria-hidden="true"></i>
-				<i class="fa fa-star{% if product.averageReview < 4.5 %}-o{% elif product.averageReview >= 4.5 and product.averageReview < 5 %}-half-o{% endif %}" aria-hidden="true"></i>
-			</span>
-		</div>
-
-
-	</header>
-	{% for review in reviews %}
-	<article class="box mb-3">
-		<div class="icontext w-100">
-			<img src="{% static 'images/avatars/avatar1.jpg' %}" class="img-xs icon rounded-circle">
-			<div class="text">
-				<span class="date text-muted float-md-right">{{ review.updated_at}} </span>
-				<h6 class="mb-1">{{ review.user.full_name }} </h6>
-				<div class="rating-star">
-					<span>
-						<i class="fa fa-star{% if review.rating == 0.5 %}-half-o{% elif review.rating < 1 %}-o{% endif %}" aria-hidden="true"></i>
-						<i class="fa fa-star{% if review.rating == 1.5 %}-half-o{% elif review.rating < 2 %}-o{% endif %}" aria-hidden="true"></i>
-						<i class="fa fa-star{% if review.rating == 2.5 %}-half-o{% elif review.rating < 3 %}-o{% endif %}" aria-hidden="true"></i>
-						<i class="fa fa-star{% if review.rating == 3.5 %}-half-o{% elif review.rating < 4 %}-o{% endif %}" aria-hidden="true"></i>
-						<i class="fa fa-star{% if review.rating == 4.5 %}-half-o{% elif review.rating < 5 %}-o{% endif %}" aria-hidden="true"></i>
-					</span>
-				</div>
-
-			</div>
-		</div> <!-- icontext.// -->
-		<div class="mt-3">
-			<h6>{{review.subject}}</h6>
-			<p>
-				{{review.review}}
-			</p>
-		</div>
-	</article>
-	{% endfor %}
+                                <div class="border-bottom border-color-1 pb-4 mb-4">
+                                    <!-- Review Rating -->
+                                    <div class="mb-2">
+                                        <div class="icontext w-100">
+			                                <img src="{{review.user.profile_picture.url}}" class="img-xs icon rounded-circle" style="object-fit:contain; width:50px;">
+                                            <span class="date text-muted float-md-right">{{ review.updated_at}} </span>
+                                            <strong>{{ review.user.user.full_name }}</strong>
+                                            <span class="font-size-13 text-gray-23">- April 3, 2019</span>
+                                        </div>
+                                    </div>
 
 
 
-	</div> <!-- col.// -->
-</div> <!-- row.// -->
-
-
-</div> <!-- container .//  -->
-</section>
-<!-- ========================= SECTION CONTENT END// ========================= -->
-
+                                    <div class="d-flex justify-content-between align-items-center text-secondary font-size-1 mb-2">
+                                        <div class="text-warning text-ls-n2 font-size-16" style="width: 80px;">
+                                            <span>
+                                            <i class="{% if review.rating < 0.5 %}far fa-star{% elif review.rating >= 0.5 and review.rating < 1 %}fas fa-star-half{% else %}fas fa-star{% endif %}" aria-hidden="true"></i>
+                                            <i class="{% if review.rating > 1 and review.rating <= 1.5  %}fas fa-star-half{% elif review.rating > 1.5 %}fas fa-star{% else %}far fa-star{% endif %}" aria-hidden="true"></i>
+                                            <i class="{% if review.rating > 2 and review.rating <= 2.5  %}fas fa-star-half{% elif review.rating >= 2.5 %}fas fa-star{% else %}far fa-star{% endif %}" aria-hidden="true"></i>
+                                            <i class="{% if review.rating > 3 and review.rating <= 3.5  %}fas fa-star-half{% elif review.rating >= 3.5 %}fas fa-star{% else %}far fa-star{% endif %}" aria-hidden="true"></i>
+                                            <i class="{% if review.rating > 4 and review.rating <= 4.5  %}fas fa-star-half{% elif review.rating >= 4.5 %}fas fa-star{% else %}far fa-star{% endif %}" aria-hidden="true"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <!-- End Review Rating -->
+                                    <h6>{{review.subject}}</h6>
+                                    <p class="text-gray-90">{{review.review}}</p>
+                                </div>
+                                {% endfor %}
+                                <!-- End Review -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Tab Content -->
+                </div>
+                <!-- End Single Product Tab -->
+        </main>
+        <!-- ========== END MAIN CONTENT ========== -->
 {% endblock %}

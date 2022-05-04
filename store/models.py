@@ -3,13 +3,18 @@ from django.db.models import Avg, Count
 
 from category.models import Category
 from django.shortcuts import reverse
-from accounts.models import Account
+from accounts.models import Account, UserProfile
 
 
 class Product(models.Model):
     product_name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, max_length=200)
-    description = models.TextField(max_length=1000, blank=True)
+    description = models.TextField(max_length=100000, blank=True)
+    product_specifications = models.TextField(blank=True)
+    key_spec1 = models.CharField(max_length=1000, blank=True)
+    key_spec2 = models.CharField(max_length=1000, blank=True)
+    key_spec3 = models.CharField(max_length=1000, blank=True)
+    key_spec4 = models.CharField(max_length=1000, blank=True)
     price = models.IntegerField()
     image = models.ImageField()
     stock = models.IntegerField()
@@ -68,7 +73,7 @@ class Variation(models.Model):
 
 class ReviewRating(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     subject = models.CharField(max_length=255, blank=True)
     review = models.TextField(max_length=500, blank=True)
     rating = models.FloatField()
@@ -78,7 +83,7 @@ class ReviewRating(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.user.first_name} - {self.subject}'
+        return f'{self.user.user.first_name} - {self.subject}'
 
 
 class ProductGallery(models.Model):
@@ -91,3 +96,27 @@ class ProductGallery(models.Model):
     class Meta:
         verbose_name = 'prooductgallery'
         verbose_name_plural = 'product gallery'
+
+
+class Featured(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.product.product_name
+
+
+class SpecialOffer(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.product.product_name
+
+
+class BannerSlide(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.product.product_name
