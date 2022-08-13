@@ -164,8 +164,9 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')  # host email password requi
 # this process is required because google blocks apps authentication by default
 # EMAIL_RECEIVING_USER =  # email on which you will receive messages sent from website
 
-PAYSTACK_PUBLIC_KEY = 'pk_test_a404dc5c4b090bb876cf7a6363d02be27472c59b'
-PAYSTACK_PRIVATE_KEY = 'sk_test_b386d242c90ce9c12f28843426a43c2f568e8dd0'
 
-STRIPE_PUBLISHABLE_KEY = 'pk_test_51KuJqrLXDUxdYuDBlszXnWJQCVIC22SmWTLQjX1nvD2KfSP6cwrjzQTTQmjexnqdcqhmH5PVOXbw0GL299JXnJ9x00jAMisf97'
-STRIPE_SECRET_KEY = 'sk_test_51KuJqrLXDUxdYuDBW8qHEZR5PTt1MlK6h8BGJf1MQXNInR5nQo95rmebyLoXB4ioFdRrU0MjhZ2SUT24dsHuMcEZ00wkMqwzXw'
+PAYSTACK_PUBLIC_KEY = config('PAYSTACK_PUBLIC_KEY')
+PAYSTACK_PRIVATE_KEY = config('PAYSTACK_PRIVATE_KEY')
+
+STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY')
+STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')

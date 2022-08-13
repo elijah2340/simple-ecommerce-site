@@ -16,7 +16,7 @@ html5lib==1.1
 idna==2.10
 lxml==4.8.0
 oscrypto==1.3.0
-Pillow==8.2.0
+Pillow
 pycparser==2.21
 pyHanko==0.12.1
 pyhanko-certvalidator==0.19.5

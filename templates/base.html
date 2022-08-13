@@ -30,6 +30,9 @@
         <!-- CSS Electro Template -->
         <link rel="stylesheet" href="{% static 'css/theme.css' %}">
         {% block static %}{% endblock %}
+        <style type="text/css">
+
+        </style>
     </head>
 
     <body>
@@ -51,7 +54,7 @@
         <!-- End Go to Top -->
         {% include 'includes/script.html' %}
         <!-- JS Plugins Init. -->
-        <script>
+        <script type="text/javascript">
             $(window).on('load', function () {
                 // initialization of HSMegaMenu component
                 $('.js-mega-menu').HSMegaMenu({
