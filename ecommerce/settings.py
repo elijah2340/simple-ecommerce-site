@@ -156,7 +156,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_SSL = True
 EMAIL_PORT = 465
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')  # this email will be used to send emails
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')  # host email password required  zmuxbgytirwjqwqr
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')  # host email password required
 # now sign in with your host gmail account in your browser
 # open following link and turn it ON
 # https://myaccount.google.com/lesssecureapps
