@@ -18,8 +18,8 @@ from store.models import Product
 from django.views.decorators.csrf import csrf_exempt
 import stripe
 from django.urls import reverse
-from django_simple_coupons.validations import validate_coupon
-from django_simple_coupons.models import Coupon
+from coupons.validations import validate_coupon
+from coupons.models import Coupon
 
 def paymentview(request, id):
     current_user = request.user
@@ -241,6 +241,7 @@ def placeorderview(request,  total=0, quantity=0):
     else:
         return redirect('checkout')
 
+from coupons.models import Coupon, CouponUser
 
 def apply_coupon(request, id):
     user = UserProfile.objects.get(user=request.user)
@@ -258,12 +259,12 @@ def apply_coupon(request, id):
     if request.method == 'POST':
         coupon_code = request.POST['coupon']
         print(coupon_code)
-        status = validate_coupon(coupon_code=coupon_code, user=user.user)
+        status = validate_coupon(coupon_code=coupon_code, user=request.user)
         if status['valid']:
             coupon_code = Coupon.objects.get(code=coupon_code)
-            coupon_code.use_coupon(user=user.user)
+            coupon_code.use_coupon(user=request.user)
             order.coupon = request.POST['coupon']
-            order.order_total -= coupon_code.discount.value
+            order.order_total = coupon_code.get_discounted_value(order.order_total)
             order.save()
             coupon_code.save()
             messages.success(request, 'You have successfully applied a coupon on your order')
@@ -276,7 +277,7 @@ def apply_coupon(request, id):
             }
             return render(request, 'orders/coupon_applied.html', context)
         else:
-            messages.error(request, 'user has exceeded coupon use limit or coupon not valid')
+            messages.error(request, f'{status['message']}')
             context = {
                 'order': order,
                 'cart_items': cart_items,

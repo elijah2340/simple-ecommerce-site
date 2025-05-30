@@ -9,7 +9,6 @@ admin.site.site_title = "Eli=Ecommerce Admin Panel"
 admin.site.index_title = "Welcome to Elijah Admin Panel"
 
 urlpatterns = [
-    path('admin/', include('admin_honeypot.urls', namespace='admin_honeypot')),
     path('elijahlogin/', admin.site.urls),
     path('home', homeview, name='home'),
     path('', RedirectView.as_view(url='/home')),

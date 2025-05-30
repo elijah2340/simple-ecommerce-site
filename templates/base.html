@@ -30,31 +30,8 @@
         <!-- CSS Electro Template -->
         <link rel="stylesheet" href="{% static 'css/theme.css' %}">
         {% block static %}{% endblock %}
-        <style type="text/css">
-
-        </style>
-    </head>
-
-    <body>
-
-
-        {% include 'includes/navbar.html' %}
-        {% block content %}{% endblock %}
-        {% include 'includes/footer.html' %}
-         <!-- Back to Top -->
-        <a class="js-go-to u-go-to" href="#"
-            data-position='{"bottom": 15, "right": 15 }'
-            data-type="fixed"
-            data-offset-top="400"
-            data-compensation="#header"
-            data-show-effect="slideInUp"
-            data-hide-effect="slideOutDown">
-            <span class="fas fa-arrow-up u-go-to__inner"></span>
-        </a>
-        <!-- End Go to Top -->
-        {% include 'includes/script.html' %}
-        <!-- JS Plugins Init. -->
-        <script type="text/javascript">
+       {% block js %}
+	<script type="text/javascript" >
             $(window).on('load', function () {
                 // initialization of HSMegaMenu component
                 $('.js-mega-menu').HSMegaMenu({
@@ -155,6 +132,28 @@
                 $.HSCore.components.HSSelectPicker.init('.js-select');
             });
         </script>
+	{% endblock %}
+    </head>
+
+    <body>
+
+
+        {% include 'includes/navbar.html' %}
+        {% block content %}{% endblock %}
+        {% include 'includes/footer.html' %}
+         <!-- Back to Top -->
+        <a class="js-go-to u-go-to" href="#"
+            data-position='{"bottom": 15, "right": 15 }'
+            data-type="fixed"
+            data-offset-top="400"
+            data-compensation="#header"
+            data-show-effect="slideInUp"
+            data-hide-effect="slideOutDown">
+            <span class="fas fa-arrow-up u-go-to__inner"></span>
+        </a>
+        <!-- End Go to Top -->
+        {% include 'includes/script.html' %}
+        <!-- JS Plugins Init. -->
 
     </body>
 </html>

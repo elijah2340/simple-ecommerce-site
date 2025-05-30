@@ -1,6 +1,62 @@
 {% extends 'base.html' %}
 {% block title %}{{ product.product_name }}{% endblock %}
 {% load static %}
+{% block js %}
+
+<script type="text/javascript">
+	    $(document).on('ready', function () {
+
+		// initialization of header
+                $.HSCore.components.HSHeader.init($('#header'));
+
+                // initialization of animation
+                $.HSCore.components.HSOnScrollAnimation.init('[data-animation]');
+
+                // initialization of unfold component
+                $.HSCore.components.HSUnfold.init($('[data-unfold-target]'), {
+                    afterOpen: function () {
+                        $(this).find('input[type="search"]').focus();
+                    }
+                });
+
+
+                // initialization of malihu scrollbar
+                $.HSCore.components.HSMalihuScrollBar.init($('.js-scrollbar'));
+
+                // initialization of show animations
+                $.HSCore.components.HSShowAnimation.init('.js-animation-link');
+
+                // initialization of fancybox
+                $.HSCore.components.HSFancyBox.init('.js-fancybox');
+
+                // initialization of slick carousel
+                $.HSCore.components.HSSlickCarousel.init('.js-slick-carousel');
+
+                // initialization of go to
+                $.HSCore.components.HSGoTo.init('.js-go-to');
+
+                // initialization of hamburgers
+                $.HSCore.components.HSHamburgers.init('#hamburgerTrigger');
+
+                // initialization of unfold component
+                $.HSCore.components.HSUnfold.init($('[data-unfold-target]'), {
+                    beforeClose: function () {
+                        $('#hamburgerTrigger').removeClass('is-active');
+                    },
+                    afterClose: function() {
+                        $('#headerSidebarList .collapse.show').collapse('hide');
+                    }
+                });
+
+
+                // initialization of unfold component
+                $.HSCore.components.HSUnfold.init($('[data-unfold-target]'));
+
+                // initialization of select picker
+                $.HSCore.components.HSSelectPicker.init('.js-select');
+            });
+        </script>
+{% endblock %}
 {% block content %}
 
 <!-- ========== MAIN CONTENT ========== -->
@@ -78,7 +134,6 @@
                                         <span class="text-secondary font-size-13">({{ product.countReview }} customer reviews)</span>
                                     </a>
                                 </div>
-                                <a href="#" class="d-inline-block max-width-150 ml-n2 mb-2"><img class="img-fluid" src="../../assets/img/200X60/img1.png" alt="Image Description"></a>
                                 <div class="mb-2">
                                     <ul class="font-size-14 pl-3 ml-1 text-gray-110">
                                         {% if product.key_spec1 %}
@@ -140,7 +195,7 @@
                                             {% if product.stock < 1 %}
                                             <a href="#" class="btn btn-block btn-primary-dark"><i class="ec ec-add-to-cart mr-2 font-size-20"></i> Out Of Stock</a>
                                             {% else %}
-                                            <button type="submit" class="btn btn-block btn-primary-dark"><i class="ec ec-add-to-cart mr-2 font-size-20"></i> Add to Cart</button>
+                                            <button type="submit" class="btn btn-block btn-primary-dark"><i class="ec mr-2 font-size-20"></i> Add to Cart</button>
                                             {% endif %}
                                         </div>
                                            {% if in_cart %}
