@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'store',
     'cart',
     'orders',
-    'django_simple_coupons',
     'coupons',
 ]
 
